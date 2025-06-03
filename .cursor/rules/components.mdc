@@ -1,0 +1,241 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Component System Guide
+
+This guide covers the custom Django component system implemented in the e-learning platform, which provides reusable UI components with slot-based content composition.
+
+## Component Architecture
+
+### Component Template Tag System
+The platform uses a custom Django template tag system defined in [educacion_financiera/templatetags/component.py](mdc:educacion_financiera/templatetags/component.py) that enables:
+- **Slot-based composition**: Components can accept named content slots
+- **Layout-aware rendering**: Components adapt to different page layouts
+- **Attribute passing**: Dynamic attributes and styling options
+- **Nested components**: Components can be composed within each other
+
+### Component Organization
+Components are organized in a hierarchical structure:
+
+**Elements**: [educacion_financiera/templates/components/elements/](mdc:educacion_financiera/templates/components/elements)
+- Basic UI elements like buttons, cards, alerts, icons
+- Reusable across different layouts and contexts
+
+**Layout**: [educacion_financiera/templates/components/layout/](mdc:educacion_financiera/templates/components/layout)
+- Structural components like headers, sidebars, navigation
+- Layout-specific and page-level components
+
+## Available Components
+
+### Element Components
+- **Button**: [button.html](mdc:educacion_financiera/templates/components/elements/button.html) - Configurable buttons with icons and variants
+- **Card**: [card.html](mdc:educacion_financiera/templates/components/elements/card.html) - Content cards with header, body, and footer slots
+- **Alert**: [alert.html](mdc:educacion_financiera/templates/components/elements/alert.html) - Notification alerts with dismissible options
+- **Icon**: [icon.html](mdc:educacion_financiera/templates/components/elements/icon.html) - Icon rendering with multiple library support
+- **Link**: [link.html](mdc:educacion_financiera/templates/components/elements/link.html) - Styled link elements
+
+### Layout Components
+- **Header**: [header.html](mdc:educacion_financiera/templates/components/layout/header.html) - Navigation headers with brand, menu, and user actions
+- **Sidebar**: [sidebar.html](mdc:educacion_financiera/templates/components/layout/sidebar.html) - Collapsible sidebar navigation
+
+## Component Usage Patterns
+
+### Basic Component Syntax
+```django
+{% load component %}
+
+<!-- Simple component with attributes -->
+{% component "button" text="Click me" variant="primary" %}{% endcomponent %}
+
+<!-- Component with slot content -->
+{% component "card" title="My Card" %}
+  <p>This content goes in the default slot</p>
+{% endcomponent %}
+```
+
+### Named Slots
+```django
+{% component "card" %}
+  {% slot header %}
+    <h5>Custom Header</h5>
+  {% endslot %}
+  
+  {% slot body %}
+    <p>Custom body content</p>
+  {% endslot %}
+  
+  {% slot footer %}
+    <button class="btn btn-primary">Action</button>
+  {% endslot %}
+{% endcomponent %}
+```
+
+### Layout Components
+```django
+{% component "header" "layout" brand_text="My App" sticky=True %}
+  {% slot "navigation" %}
+    <li class="nav-item"><a href="/">Home</a></li>
+  {% endslot %}
+  
+  {% slot actions %}
+    {% component "button" text="Login" variant="outline-primary" %}{% endcomponent %}
+  {% endslot %}
+{% endcomponent %}
+```
+
+### Simple Tag Usage
+```django
+<!-- For components without slots -->
+{% render_component "button" variant="success" text="Simple Button" %}
+{% render_component "alert" variant="warning" message="Warning message" %}
+
+<!-- Convenience tags -->
+{% button "Submit" variant="primary" size="lg" %}
+{% icon "user" size="md" color="primary" %}
+```
+
+## Component Development Guidelines
+
+### Creating New Components
+1. **Element Components**: Place in `templates/components/elements/`
+2. **Layout Components**: Place in `templates/components/layout/`
+3. **Naming**: Use descriptive, lowercase names with hyphens
+4. **Template Structure**: Follow the established patterns with `attrs` and `slots`
+
+### Component Template Structure
+```django
+<div class="component-name{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}"
+     {% if attrs.id %}id="{{ attrs.id }}"{% endif %}>
+  
+  {% if slots.header or attrs.title %}
+    <div class="component-header">
+      {% if slots.header %}
+        {% for slot_content in slots.header %}{{ slot_content|safe }}{% endfor %}
+      {% elif attrs.title %}
+        <h5>{{ attrs.title }}</h5>
+      {% endif %}
+    </div>
+  {% endif %}
+  
+  <div class="component-body">
+    {% if slots.default %}
+      {% for slot_content in slots.default %}{{ slot_content|safe }}{% endfor %}
+    {% elif attrs.content %}
+      {{ attrs.content }}
+    {% endif %}
+  </div>
+</div>
+```
+
+### Attribute Conventions
+- **css_class**: Additional CSS classes
+- **id**: Element ID
+- **variant**: Style variant (primary, secondary, success, etc.)
+- **size**: Size variant (sm, md, lg)
+- **disabled**: Disabled state
+- **icon_left/icon_right**: Icon positioning
+
+### Slot Conventions
+- **default**: Main content slot (used when no slot name specified)
+- **header**: Header content
+- **body**: Body content  
+- **footer**: Footer content
+- **navigation**: Navigation items
+- **actions**: Action buttons or controls
+
+## Layout System Integration
+
+### Layout-Aware Components
+Components automatically adapt to the current page layout:
+- Layout detection from `{% extends %}` templates
+- Layout-specific component variants (e.g., `button__admin.html`)
+- Context-aware styling and behavior
+
+### Layout Context
+```django
+<!-- Components check for layout context -->
+{% if layout == "admin" %}
+  <!-- Admin-specific styling -->
+{% elif layout == "course" %}
+  <!-- Course-specific styling -->
+{% endif %}
+```
+
+## Testing Components
+
+### Component Demo
+Reference the component demonstration at [templates/examples/component_demo.html](mdc:educacion_financiera/templates/examples/component_demo.html) for:
+- Usage examples for all components
+- Slot composition patterns
+- Nested component examples
+- Layout integration examples
+
+### Testing Patterns
+```django
+<!-- Test component with various attributes -->
+{% component "button" variant="primary" size="lg" disabled=True %}
+  Test Button
+{% endcomponent %}
+
+<!-- Test nested components -->
+{% component "card" %}
+  {% slot "body" %}
+    {% component "alert" variant="info" message="Nested alert" %}{% endcomponent %}
+  {% endslot %}
+{% endcomponent %}
+```
+
+## Best Practices
+
+### Component Design
+- **Single Responsibility**: Each component should have a clear, focused purpose
+- **Composability**: Design components to work well together
+- **Flexibility**: Use slots and attributes for customization
+- **Consistency**: Follow established naming and structure patterns
+
+### Performance Considerations
+- **Template Caching**: Components benefit from Django's template caching
+- **Minimal Nesting**: Avoid excessive component nesting for performance
+- **Efficient Queries**: Use `select_related` and `prefetch_related` in component context
+
+### Accessibility
+- **Semantic HTML**: Use appropriate HTML elements and ARIA attributes
+- **Keyboard Navigation**: Ensure components are keyboard accessible
+- **Screen Readers**: Provide appropriate labels and descriptions
+- **Color Contrast**: Follow WCAG guidelines for color and contrast
+
+## Integration with Django Apps
+
+### App-Specific Components
+Apps can extend the component system:
+```python
+# In app templates
+{% extends "base.html" %}
+{% load component %}
+
+{% block content %}
+  {% component "course-card" course=course %}{% endcomponent %}
+{% endblock %}
+```
+
+### Component Context Processors
+Components can access Django context:
+- **request**: Current HTTP request
+- **user**: Current user
+- **perms**: User permissions
+- **messages**: Django messages framework
+
+### Form Integration
+```django
+{% component "card" title="User Form" %}
+  {% slot "body" %}
+    {{ form.as_p }}
+  {% endslot %}
+  
+  {% slot "footer" %}
+    {% component "button" type="submit" text="Save" variant="primary" %}{% endcomponent %}
+  {% endslot %}
+{% endcomponent %}
+```

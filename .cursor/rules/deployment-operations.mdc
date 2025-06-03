@@ -1,0 +1,216 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Deployment & Operations Guide
+
+This guide covers deployment, monitoring, and operational aspects of the e-learning platform.
+
+## Development Environment
+
+### Local Setup
+1. **Python Environment**: Python 3.12 with virtual environment
+2. **Database**: PostgreSQL (recommended) or SQLite for development
+3. **Cache/Queue**: Redis for Celery and caching
+4. **Email**: Mailpit for local email testing ([mailpit binary](mdc:educacion_financiera/mailpit))
+
+### Environment Configuration
+- **Settings**: Environment-specific settings in [config/settings/](mdc:educacion_financiera/config/settings)
+- **Environment Variables**: Use `.env` files for sensitive configuration
+- **Database**: Configure in settings based on environment
+
+### Development Commands
+```bash
+# Start development server
+cd educacion_financiera
+python manage.py runserver
+
+# Run Celery worker
+celery -A config.celery_app worker -l info
+
+# Run Celery beat scheduler
+celery -A config.celery_app beat
+
+# Start Mailpit for email testing
+./mailpit
+```
+
+## Testing & Quality Assurance
+
+### Automated Testing
+- **Framework**: pytest with Django integration
+- **Configuration**: Defined in [pyproject.toml](mdc:educacion_financiera/pyproject.toml)
+- **Coverage**: Target high coverage excluding migrations
+
+### Code Quality Checks
+```bash
+# Run linting
+ruff check .
+
+# Format code
+ruff format .
+
+# Type checking
+mypy educacion_financiera
+
+# Template linting
+djlint --check .
+
+# Run all pre-commit hooks
+pre-commit run --all-files
+```
+
+### Continuous Integration
+- **Pre-commit Hooks**: [.pre-commit-config.yaml](mdc:educacion_financiera/.pre-commit-config.yaml)
+- **GitHub Actions**: Configuration in [.github/](mdc:educacion_financiera/.github)
+- **Quality Gates**: Linting, testing, and security checks
+
+## Production Deployment
+
+### Infrastructure Requirements
+- **Web Server**: Gunicorn with Nginx reverse proxy
+- **Database**: PostgreSQL with connection pooling
+- **Cache**: Redis for sessions and caching
+- **Queue**: Redis for Celery task queue
+- **Storage**: S3-compatible storage for media files
+
+### Environment Variables
+```bash
+# Essential production settings
+DJANGO_SETTINGS_MODULE=config.settings.production
+SECRET_KEY=your-secret-key
+DATABASE_URL=postgres://user:pass@host:port/db
+REDIS_URL=redis://host:port/0
+CELERY_BROKER_URL=redis://host:port/0
+```
+
+### Static Files & Media
+- **Static Files**: Collected and served via CDN or Nginx
+- **Media Files**: User uploads stored in S3 or similar
+- **Configuration**: Django's static file management system
+
+### Security Configuration
+- **HTTPS**: SSL/TLS certificates (Let's Encrypt recommended)
+- **CSRF**: Django's built-in CSRF protection
+- **CORS**: Configure for API access if needed
+- **Security Headers**: Use Django security middleware
+
+## Monitoring & Logging
+
+### Error Tracking
+- **Sentry**: Configured for error aggregation and monitoring
+- **Configuration**: Set DSN in production settings
+- **Integration**: WSGI application integration included
+
+### Application Monitoring
+- **Health Checks**: Implement health check endpoints
+- **Performance**: Monitor response times and database queries
+- **Uptime**: External monitoring for service availability
+
+### Logging Strategy
+```python
+# Logging configuration example
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'django.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+```
+
+## Database Management
+
+### Migrations
+```bash
+# Create migrations
+python manage.py makemigrations
+
+# Apply migrations
+python manage.py migrate
+
+# Check migration status
+python manage.py showmigrations
+```
+
+### Backup Strategy
+- **Regular Backups**: Automated database backups
+- **Point-in-time Recovery**: Transaction log backups
+- **Testing**: Regular backup restoration testing
+
+### Performance Optimization
+- **Indexing**: Database indexes for frequently queried fields
+- **Query Optimization**: Use Django Debug Toolbar in development
+- **Connection Pooling**: Configure database connection pooling
+
+## Celery Task Management
+
+### Worker Configuration
+```bash
+# Production worker with concurrency
+celery -A config.celery_app worker -l info -c 4
+
+# Beat scheduler for periodic tasks
+celery -A config.celery_app beat -l info
+
+# Monitor tasks
+celery -A config.celery_app flower
+```
+
+### Task Monitoring
+- **Flower**: Web-based monitoring for Celery
+- **Task States**: Monitor task success/failure rates
+- **Queue Management**: Monitor queue lengths and processing times
+
+### Common Tasks
+- Email notifications and campaigns
+- Data processing and analytics
+- File processing and conversions
+- Scheduled maintenance tasks
+
+## Scaling Considerations
+
+### Horizontal Scaling
+- **Load Balancing**: Multiple application instances behind load balancer
+- **Database**: Read replicas for read-heavy workloads
+- **Cache**: Distributed caching with Redis Cluster
+- **Static Files**: CDN for global content delivery
+
+### Performance Optimization
+- **Database Queries**: Optimize with select_related and prefetch_related
+- **Caching**: Implement caching at multiple levels
+- **Async Processing**: Use Celery for heavy operations
+- **Content Delivery**: CDN for static and media files
+
+## Maintenance & Updates
+
+### Regular Maintenance
+- **Security Updates**: Keep dependencies updated
+- **Database Maintenance**: Regular VACUUM and ANALYZE
+- **Log Rotation**: Implement log rotation policies
+- **Backup Verification**: Test backup restoration procedures
+
+### Deployment Process
+1. **Code Review**: All changes reviewed before deployment
+2. **Testing**: Comprehensive testing in staging environment
+3. **Migration**: Database migrations applied safely
+4. **Rollback Plan**: Quick rollback procedures in place
+5. **Monitoring**: Post-deployment monitoring and verification
+
+### Documentation
+- **Runbooks**: Operational procedures documentation
+- **Architecture**: System architecture documentation
+- **API Documentation**: Keep API docs updated
+- **Change Log**: Track all production changes

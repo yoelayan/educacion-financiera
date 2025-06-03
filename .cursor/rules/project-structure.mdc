@@ -1,0 +1,51 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# E-Learning Platform Project Structure
+
+This is a Django-based e-learning platform for financial education built with cookiecutter-django.
+
+## Project Layout
+
+### Main Project Structure
+- **Root**: `/educacion_financiera/` - Main Django project directory
+- **Settings**: [config/settings/](mdc:educacion_financiera/config/settings) - Environment-specific settings
+- **Main Config**: [config/](mdc:educacion_financiera/config) - URLs, WSGI, ASGI, Celery configuration
+- **Apps**: [educacion_financiera/apps/](mdc:educacion_financiera/educacion_financiera/apps) - Django applications
+- **Users**: [educacion_financiera/users/](mdc:educacion_financiera/educacion_financiera/users) - Custom user management
+- **Templates**: [educacion_financiera/templates/](mdc:educacion_financiera/educacion_financiera/templates) - HTML templates
+- **Static Files**: [educacion_financiera/static/](mdc:educacion_financiera/educacion_financiera/static) - CSS, JS, images
+
+### Core Applications
+- **Courses**: [apps/courses/](mdc:educacion_financiera/educacion_financiera/apps/courses) - Course management and content
+- **Profiles**: [apps/profiles/](mdc:educacion_financiera/educacion_financiera/apps/profiles) - User profiles and progress tracking
+- **Payments**: [apps/payments/](mdc:educacion_financiera/educacion_financiera/apps/payments) - Payment processing
+- **Subscriptions**: [apps/subscriptions/](mdc:educacion_financiera/educacion_financiera/apps/subscriptions) - Subscription management
+- **Discussions**: [apps/discussions/](mdc:educacion_financiera/educacion_financiera/apps/discussions) - Forums and discussions
+
+### Key Configuration Files
+- **Dependencies**: [pyproject.toml](mdc:educacion_financiera/pyproject.toml) - Python dependencies and tool configuration
+- **Django Management**: [manage.py](mdc:educacion_financiera/manage.py) - Django management commands
+- **Main URLs**: [config/urls.py](mdc:educacion_financiera/config/urls.py) - Root URL configuration
+- **API Router**: [config/api_router.py](mdc:educacion_financiera/config/api_router.py) - DRF API routing
+
+### Development Tools
+- **Pre-commit**: [.pre-commit-config.yaml](mdc:educacion_financiera/.pre-commit-config.yaml) - Code quality hooks
+- **Testing**: Uses pytest with Django integration
+- **Linting**: Ruff for Python linting and formatting
+- **Type Checking**: mypy with Django stubs
+- **Template Linting**: djLint for Django templates
+
+### Background Tasks
+- **Celery**: [config/celery_app.py](mdc:educacion_financiera/config/celery_app.py) - Asynchronous task processing
+- **Email**: Mailpit for local email testing
+
+## Development Workflow
+1. All new features should be developed as Django apps in the `apps/` directory
+2. Follow the MVT pattern: Models in `models.py`, Views in `views.py`, Templates in app templates
+3. Use class-based views for complex logic, function-based views for simple operations
+4. Leverage Django's built-in authentication and user management
+5. Write tests for all new functionality using pytest
+6. Follow PEP 8 and use the configured linting tools

@@ -1,0 +1,136 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Development Standards & Code Quality
+
+This document outlines the development standards and code quality practices for the e-learning platform.
+
+## Code Quality Tools
+
+### Python Linting & Formatting
+- **Ruff**: Primary linter and formatter configured in [pyproject.toml](mdc:educacion_financiera/pyproject.toml)
+- **Target Python Version**: 3.12
+- **Import Sorting**: Single-line imports enforced
+- **Line Length**: 119 characters maximum
+
+### Type Checking
+- **mypy**: Static type checking with Django plugin
+- **Configuration**: Defined in [pyproject.toml](mdc:educacion_financiera/pyproject.toml)
+- **Django Stubs**: Enhanced type checking for Django models and views
+
+### Template Linting
+- **djLint**: Django template linter and formatter
+- **Indentation**: 2 spaces for HTML, CSS, and JavaScript
+- **Profile**: Django-specific rules and formatting
+
+### Pre-commit Hooks
+- **Configuration**: [.pre-commit-config.yaml](mdc:educacion_financiera/.pre-commit-config.yaml)
+- **Automatic**: Runs linting, formatting, and basic checks before commits
+
+## Testing Standards
+
+### Test Framework
+- **pytest**: Primary testing framework with Django integration
+- **Configuration**: `--ds=config.settings.test --reuse-db --import-mode=importlib`
+- **Coverage**: Django coverage plugin enabled
+
+### Test Organization
+- **Location**: Tests should be in `tests.py` or `test_*.py` files within each app
+- **Coverage**: Aim for high test coverage, excluding migrations
+- **Database**: Use `--reuse-db` for faster test runs
+
+### Running Tests
+```bash
+# Run all tests
+pytest
+
+# Run with coverage
+coverage run -m pytest
+coverage html
+```
+
+## Django Best Practices
+
+### Model Guidelines
+- Use descriptive field names and model names
+- Add `__str__` methods for better admin representation
+- Use model validation and custom managers when appropriate
+- Optimize queries with `select_related` and `prefetch_related`
+
+### View Guidelines
+- Keep views lightweight - business logic belongs in models or forms
+- Use class-based views for complex functionality
+- Use function-based views for simple operations
+- Implement proper error handling and validation
+
+### URL Patterns
+- Use descriptive URL names
+- Group related URLs in app-specific `urls.py` files
+- Follow RESTful conventions for API endpoints
+- Reference: [config/urls.py](mdc:educacion_financiera/config/urls.py)
+
+### Security Practices
+- Always use Django's CSRF protection
+- Validate and sanitize user input
+- Use Django's built-in authentication system
+- Follow OWASP security guidelines
+
+## File Organization
+
+### App Structure
+Each Django app should follow this structure:
+```
+app_name/
+├── __init__.py
+├── admin.py          # Admin interface configuration
+├── apps.py           # App configuration
+├── models.py         # Database models
+├── views.py          # View logic
+├── urls.py           # URL patterns
+├── forms.py          # Form definitions (if needed)
+├── serializers.py    # DRF serializers (if API app)
+├── tests.py          # Test cases
+├── migrations/       # Database migrations
+└── templates/        # App-specific templates
+    └── app_name/
+```
+
+### Import Organization
+- Standard library imports first
+- Third-party imports second
+- Django imports third
+- Local application imports last
+- Use absolute imports for clarity
+
+## Performance Guidelines
+
+### Database Optimization
+- Use database indexes for frequently queried fields
+- Optimize queries with `select_related` and `prefetch_related`
+- Use database-level constraints when possible
+- Monitor query performance in development
+
+### Caching Strategy
+- Use Django's caching framework for expensive operations
+- Cache template fragments for dynamic content
+- Consider Redis for session storage and caching
+
+### Static Files
+- Optimize images and assets
+- Use Django's static file management
+- Consider CDN for production deployments
+
+## Documentation Standards
+
+### Code Documentation
+- Use docstrings for all classes and functions
+- Follow Google or NumPy docstring conventions
+- Document complex business logic
+- Keep comments up-to-date with code changes
+
+### API Documentation
+- Use Django REST Framework's built-in documentation
+- Document all API endpoints and parameters
+- Provide example requests and responses
