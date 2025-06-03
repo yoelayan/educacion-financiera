@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% load static i18n component %}
+
+{% block title %}Mis Certificados - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 text-primary">
+                        <i class="fas fa-certificate me-2"></i>Mis Certificados
+                    </h1>
+                    <p class="text-muted mb-0">Certificados obtenidos por completar cursos</p>
+                </div>
+                <div class="text-end">
+                    <div class="bg-primary text-white rounded p-3">
+                        <h4 class="mb-0">{{ total_certificates }}</h4>
+                        <small>Certificados obtenidos</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if certificates %}
+        <!-- Latest Certificate -->
+        {% if latest_certificate %}
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-star me-2"></i>Último Certificado Obtenido
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h5 class="text-primary">{{ latest_certificate.course.title }}</h5>
+                                <p class="text-muted mb-2">{{ latest_certificate.course.category.name }}</p>
+                                <p class="mb-2">{{ latest_certificate.course.overview|truncatewords:20 }}</p>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Obtenido el {{ latest_certificate.issue_date|date:"d/m/Y" }}
+                                </small>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="certificate-preview bg-light p-3 rounded">
+                                    <i class="fas fa-certificate text-warning fa-3x mb-2"></i>
+                                    <br>
+                                    <small class="text-muted">Certificado #{{ latest_certificate.certificate_id|upper }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Certificates by Category -->
+        {% for category, certs in certificates_by_category.items %}
+        <div class="row mb-4">
+            <div class="col">
+                <h4 class="text-secondary mb-3">
+                    <i class="fas fa-folder me-2"></i>{{ category }}
+                </h4>
+                <div class="row">
+                    {% for certificate in certs %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="text-center mb-3">
+                                    <i class="fas fa-certificate text-warning fa-2x"></i>
+                                </div>
+                                <h6 class="card-title text-primary">{{ certificate.course.title }}</h6>
+                                <p class="card-text small text-muted">
+                                    {{ certificate.course.overview|truncatewords:15 }}
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center text-small text-muted mb-2">
+                                    <span>
+                                        <i class="fas fa-user me-1"></i>
+                                        {{ certificate.course.instructor.name }}
+                                    </span>
+                                    <span>
+                                        <i class="fas fa-calendar me-1"></i>
+                                        {{ certificate.issue_date|date:"M Y" }}
+                                    </span>
+                                </div>
+                                <div class="text-center">
+                                    <small class="text-muted d-block">
+                                        Certificado #{{ certificate.certificate_id|upper }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 text-center">
+                                <button class="btn btn-outline-primary btn-sm"
+                                        onclick="showCertificateModal('{{ certificate.certificate_id }}', '{{ certificate.course.title }}', '{{ certificate.student.name }}', '{{ certificate.issue_date|date:"d/m/Y" }}')">
+                                    <i class="fas fa-eye me-1"></i>Ver Certificado
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <div class="row">
+            <div class="col">
+                <nav aria-label="Certificados pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                    <i class="fas fa-angle-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        <li class="page-item active">
+                            <span class="page-link">
+                                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                            </span>
+                        </li>
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                    <i class="fas fa-angle-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        {% endif %}
+
+    {% else %}
+        <!-- No certificates state -->
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="text-center py-5">
+                    <i class="fas fa-certificate text-muted fa-4x mb-3"></i>
+                    <h4 class="text-muted">Aún no tienes certificados</h4>
+                    <p class="text-muted mb-4">
+                        Completa cursos para obtener certificados y demostrar tus conocimientos.
+                    </p>
+                    <a href="{% url 'dashboard:course_search' %}" class="btn btn-primary">
+                        <i class="fas fa-search me-2"></i>Explorar Cursos
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Certificate Modal -->
+<div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="certificateModalLabel">Certificado de Finalización</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="certificate-preview-large bg-light p-4 rounded text-center">
+                    <div class="border border-primary p-4 position-relative">
+                        <div class="certificate-decoration">
+                            <i class="fas fa-certificate text-warning position-absolute" style="top: 10px; left: 10px; font-size: 2rem;"></i>
+                            <i class="fas fa-certificate text-warning position-absolute" style="top: 10px; right: 10px; font-size: 2rem;"></i>
+                        </div>
+
+                        <h2 class="text-primary mb-4">Certificado de Finalización</h2>
+
+                        <p class="h5 mb-3">Se certifica que</p>
+                        <h3 class="text-primary mb-4" id="cert-student-name"></h3>
+
+                        <p class="mb-2">ha completado satisfactoriamente el curso</p>
+                        <h4 class="text-secondary mb-4" id="cert-course-title"></h4>
+
+                        <p class="mb-4">otorgado por <strong>{{ site_name }}</strong></p>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Fecha de emisión:</strong></p>
+                                <p id="cert-issue-date"></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Certificado ID:</strong></p>
+                                <p id="cert-id"></p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <i class="fas fa-stamp text-primary fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="printCertificate()">
+                    <i class="fas fa-download me-1"></i>Descargar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block inline_javascript %}
+<script>
+function showCertificateModal(certId, courseTitle, studentName, issueDate) {
+    document.getElementById('cert-id').textContent = certId.toUpperCase();
+    document.getElementById('cert-course-title').textContent = courseTitle;
+    document.getElementById('cert-student-name').textContent = studentName;
+    document.getElementById('cert-issue-date').textContent = issueDate;
+
+    const modal = new bootstrap.Modal(document.getElementById('certificateModal'));
+    modal.show();
+}
+
+function printCertificate() {
+    const printContent = document.querySelector('.certificate-preview-large').innerHTML;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Certificado</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    .border { border: 2px solid #0d6efd; }
+                    .p-4 { padding: 1.5rem; }
+                    .text-center { text-align: center; }
+                    .text-primary { color: #0d6efd; }
+                    .text-secondary { color: #6c757d; }
+                    .position-relative { position: relative; }
+                    .position-absolute { position: absolute; }
+                    h2, h3, h4 { margin: 0.5rem 0; }
+                    p { margin: 0.25rem 0; }
+                </style>
+            </head>
+            <body>
+                ${printContent}
+            </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
+</script>
+{% endblock %}

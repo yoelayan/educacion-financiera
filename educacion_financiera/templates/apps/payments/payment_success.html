@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% translate "Payment Successful" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .success-container {
+    max-width: 600px;
+    margin: 5rem auto;
+    text-align: center;
+  }
+  .success-icon {
+    font-size: 5rem;
+    color: #28a745;
+    margin-bottom: 1rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container success-container">
+  <div class="card">
+    <div class="card-body py-5">
+      <i class="fas fa-check-circle success-icon"></i>
+      <h1 class="mb-4">{% translate "Payment Successful!" %}</h1>
+      <p class="mb-4">{% translate "Thank you for your purchase. Your payment has been processed successfully." %}</p>
+
+      <p class="text-muted mb-4">
+        {% translate "You will receive a confirmation email shortly. Your access to the purchased content will be available immediately." %}
+      </p>
+
+      <div class="mt-4">
+        <a href="{% url 'courses:course_list' %}" class="btn btn-primary me-2">
+          {% translate "Browse More Courses" %}
+        </a>
+        <a href="{% url 'users:detail' request.user.id %}" class="btn btn-outline-primary">
+          {% translate "Go to My Dashboard" %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

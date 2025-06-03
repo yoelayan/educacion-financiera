@@ -1,0 +1,20 @@
+{% load static %}
+
+{% if attrs.library == 'heroicons' %}
+  <svg class="icon icon-{{ size }} text-{{ color }}{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}"
+       {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
+       fill="currentColor" viewBox="0 0 24 24">
+    <use href="{% static 'icons/heroicons.svg' %}#{{ name }}"></use>
+  </svg>
+{% elif attrs.library == 'feather' %}
+  <i data-feather="{{ name }}"
+     class="icon icon-{{ size }} text-{{ color }}{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}"
+     {% if attrs.id %}id="{{ attrs.id }}"{% endif %}></i>
+{% elif attrs.library == 'fontawesome' %}
+  <i class="fas fa-{{ name }} icon-{{ size }} text-{{ color }}{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}"
+     {% if attrs.id %}id="{{ attrs.id }}"{% endif %}></i>
+{% else %}
+  {# Default to Bootstrap Icons #}
+  <i class="bi bi-{{ name }} icon-{{ size }} text-{{ color }}{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}"
+     {% if attrs.id %}id="{{ attrs.id }}"{% endif %}></i>
+{% endif %}

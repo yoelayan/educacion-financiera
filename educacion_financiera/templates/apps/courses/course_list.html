@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% translate "Courses" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <!-- Sidebar with filters -->
+    <div class="col-md-3">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>{% translate "Filter Courses" %}</h5>
+        </div>
+        <div class="card-body">
+          <form method="get">
+            <div class="mb-3">
+              <label for="category" class="form-label">{% translate "Category" %}</label>
+              <select name="category" id="category" class="form-select">
+                <option value="">{% translate "All Categories" %}</option>
+                {% for category in categories %}
+                  <option value="{{ category.slug }}" {% if filters.category == category.slug %}selected{% endif %}>
+                    {{ category.name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="min_price" class="form-label">{% translate "Min Price" %}</label>
+              <input type="number" name="min_price" id="min_price" class="form-control"
+                     value="{{ filters.min_price }}" min="0" step="0.01">
+            </div>
+
+            <div class="mb-3">
+              <label for="max_price" class="form-label">{% translate "Max Price" %}</label>
+              <input type="number" name="max_price" id="max_price" class="form-control"
+                     value="{{ filters.max_price }}" min="0" step="0.01">
+            </div>
+
+            <div class="mb-3">
+              <label for="sort" class="form-label">{% translate "Sort By" %}</label>
+              <select name="sort" id="sort" class="form-select">
+                <option value="-created" {% if filters.sort == '-created' %}selected{% endif %}>
+                  {% translate "Newest" %}
+                </option>
+                <option value="price" {% if filters.sort == 'price' %}selected{% endif %}>
+                  {% translate "Price: Low to High" %}
+                </option>
+                <option value="-price" {% if filters.sort == '-price' %}selected{% endif %}>
+                  {% translate "Price: High to Low" %}
+                </option>
+                <option value="title" {% if filters.sort == 'title' %}selected{% endif %}>
+                  {% translate "Title (A-Z)" %}
+                </option>
+                <option value="-title" {% if filters.sort == '-title' %}selected{% endif %}>
+                  {% translate "Title (Z-A)" %}
+                </option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">{% translate "Apply Filters" %}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course grid -->
+    <div class="col-md-9">
+      <h1 class="mb-4">{% translate "Available Courses" %}</h1>
+
+      {% if courses %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          {% for course in courses %}
+            <div class="col">
+              <div class="card h-100">
+                {% if course.image %}
+                  <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}">
+                {% else %}
+                  <img src="{% static 'images/course-placeholder.jpg' %}" class="card-img-top" alt="{{ course.title }}">
+                {% endif %}
+                <div class="card-body">
+                  <h5 class="card-title">{{ course.title }}</h5>
+                  <p class="card-text text-muted">{{ course.overview|truncatewords:15 }}</p>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    {% if course.price > 0 %}
+                      <span class="badge bg-primary">{{ course.price }} USD</span>
+                    {% else %}
+                      <span class="badge bg-success">{% translate "Free" %}</span>
+                    {% endif %}
+                    <small class="text-muted">{{ course.instructor.name }}</small>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <a href="{% url 'courses:course_detail' course.slug %}" class="btn btn-outline-primary w-100">
+                    {% translate "View Course" %}
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+          <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+              {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page=1{% for key, value in filters.items %}&{{ key }}={{ value }}{% endfor %}">
+                    {% translate "First" %}
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in filters.items %}&{{ key }}={{ value }}{% endfor %}">
+                    {% translate "Previous" %}
+                  </a>
+                </li>
+              {% endif %}
+
+              <li class="page-item active">
+                <span class="page-link">
+                  {{ page_obj.number }} {% translate "of" %} {{ page_obj.paginator.num_pages }}
+                </span>
+              </li>
+
+              {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in filters.items %}&{{ key }}={{ value }}{% endfor %}">
+                    {% translate "Next" %}
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% for key, value in filters.items %}&{{ key }}={{ value }}{% endfor %}">
+                    {% translate "Last" %}
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+      {% else %}
+        <div class="alert alert-info">
+          {% translate "No courses found matching your filters. Try different criteria." %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

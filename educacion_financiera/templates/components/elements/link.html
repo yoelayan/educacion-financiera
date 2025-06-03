@@ -1,0 +1,20 @@
+<a href="{{ attrs.href }}" class="btn btn-{{ attrs.variant|default:'primary' }} btn-{{ attrs.size|default:'md' }}{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}{% if attrs.disabled %} disabled{% endif %}"
+   {% if attrs.id %}id="{{ attrs.id }}"{% endif %}
+   {% if attrs.onclick %}onclick="{{ attrs.onclick }}"{% endif %}
+   {% if attrs.disabled %}disabled{% endif %}
+   {% for key, value in attrs.items %}
+     {% if key not in 'variant,size,css_class,type,disabled,id,onclick,text' %}
+       {{ key }}="{{ value }}"
+     {% endif %}
+   {% endfor %}
+>
+  {% if attrs.icon_left %}
+    <i class="icon icon-{{ attrs.icon_left }} me-2"></i>
+  {% endif %}
+
+  {% if slots.default %}
+    {% for slot_content in slots.default %}{{ slot_content|safe }}{% endfor %}
+  {% elif attrs.text %}
+    {{ attrs.text }}
+  {% endif %}
+</a>

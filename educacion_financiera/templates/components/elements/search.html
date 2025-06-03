@@ -1,0 +1,56 @@
+<div class="search-component{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}"
+     {% if attrs.id %}id="{{ attrs.id }}"{% endif %}>
+
+  <form class="search-form" method="GET"
+  {% if slots.action %}
+    action="{{ slots.action }}"
+  {% else %}
+    action="{{ attrs.action|default:'/courses/search/' }}"
+  {% endif %}
+  >
+    <div class="input-group">
+      {% if attrs.icon_left %}
+        <span class="input-group-text">
+          <i class="{{ attrs.icon_left }}"></i>
+        </span>
+      {% endif %}
+
+      <input type="text"
+             class="form-control search-input"
+             name="{{ attrs.name|default:'q' }}"
+             placeholder="{{ attrs.placeholder|default:'¿Qué quieres aprender?' }}"
+             value="{{ attrs.value|default:'' }}"
+             {% if attrs.autocomplete %}autocomplete="{{ attrs.autocomplete }}"{% endif %}
+             {% if attrs.required %}required{% endif %}>
+
+      {% if slots.filters %}
+        <div class="search-filters">
+          {% for slot_content in slots.filters %}{{ slot_content|safe }}{% endfor %}
+        </div>
+      {% endif %}
+
+      {% if attrs.show_button %}
+        <button class="btn btn-{{ attrs.button_variant|default:'primary' }}" type="submit">
+          {% if attrs.button_icon %}
+            <i class="{{ attrs.button_icon }}"></i>
+          {% endif %}
+          {% if attrs.button_text %}
+            {{ attrs.button_text }}
+          {% endif %}
+        </button>
+      {% endif %}
+    </div>
+
+    {% if slots.suggestions %}
+      <div class="search-suggestions">
+        {% for slot_content in slots.suggestions %}{{ slot_content|safe }}{% endfor %}
+      </div>
+    {% endif %}
+  </form>
+
+  {% if slots.results %}
+    <div class="search-results">
+      {% for slot_content in slots.results %}{{ slot_content|safe }}{% endfor %}
+    </div>
+  {% endif %}
+</div>

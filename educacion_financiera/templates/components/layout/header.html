@@ -1,0 +1,56 @@
+<header class="header{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}{% if attrs.sticky %} sticky-top{% endif %}"
+        {% if attrs.id %}id="{{ attrs.id }}"{% endif %}>
+
+  <nav class="navbar navbar-expand-lg navbar-{{ attrs.theme|default:'light' }} bg-{{ attrs.bg|default:'light' }}">
+    <div class="container{% if attrs.fluid %}-fluid{% endif %}">
+
+      {% if slots.brand or attrs.brand_text or attrs.logo %}
+        <a class="navbar-brand" href="{{ attrs.brand_url|default:'/' }}">
+          {% if slots.brand %}
+            {% for slot_content in slots.brand %}{{ slot_content|safe }}{% endfor %}
+          {% else %}
+            {% if attrs.logo %}
+              <img src="{{ attrs.logo }}" alt="{{ attrs.brand_text|default:'Logo' }}" height="{{ attrs.logo_height|default:'30' }}">
+            {% endif %}
+            {% if attrs.brand_text %}
+              {{ attrs.brand_text }}
+            {% endif %}
+          {% endif %}
+        </a>
+      {% endif %}
+
+      {% if slots.navigation or attrs.show_toggle %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          {% if slots.navigation %}
+            <ul class="navbar-nav me-auto">
+              {% for slot_content in slots.navigation %}{{ slot_content|safe }}{% endfor %}
+            </ul>
+          {% endif %}
+
+          {% if slots.actions %}
+            <div class="navbar-nav ms-auto">
+              {% for slot_content in slots.actions %}{{ slot_content|safe }}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if slots.user_menu %}
+        <div class="navbar-nav ms-auto">
+          {% for slot_content in slots.user_menu %}{{ slot_content|safe }}{% endfor %}
+        </div>
+      {% endif %}
+
+    </div>
+  </nav>
+
+  {% if slots.default %}
+    <div class="header-content">
+      {% for slot_content in slots.default %}{{ slot_content|safe }}{% endfor %}
+    </div>
+  {% endif %}
+</header>

@@ -1,0 +1,126 @@
+{% extends "allauth/layouts/entrance.html" %}
+{% load i18n allauth %}
+
+{% block allauth_title %}
+  {% trans "Crear Cuenta" %}
+{% endblock allauth_title %}
+
+{% block allauth_subtitle %}
+  {% trans "Únete a miles de estudiantes y transforma tu futuro financiero" %}
+{% endblock allauth_subtitle %}
+
+{% block content %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+      {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+
+      {% element field field=form.first_name %}
+        {% slot label %}
+          <i class="fas fa-user me-2"></i>{% trans "Nombre" %}
+        {% endslot %}
+      {% endelement %}
+
+      {% element field field=form.last_name %}
+        {% slot label %}
+          <i class="fas fa-user me-2"></i>{% trans "Apellido" %}
+        {% endslot %}
+      {% endelement %}
+
+      {% element field field=form.email %}
+        {% slot label %}
+          <i class="fas fa-envelope me-2"></i>{% trans "Correo Electrónico" %}
+        {% endslot %}
+      {% endelement %}
+
+      {% if form.username %}
+        {% element field field=form.username %}
+          {% slot label %}
+            <i class="fas fa-at me-2"></i>{% trans "Nombre de Usuario" %}
+          {% endslot %}
+        {% endelement %}
+      {% endif %}
+
+      {% element field field=form.password1 %}
+        {% slot label %}
+          <i class="fas fa-lock me-2"></i>{% trans "Contraseña" %}
+        {% endslot %}
+      {% endelement %}
+
+      {% element field field=form.password2 %}
+        {% slot label %}
+          <i class="fas fa-lock me-2"></i>{% trans "Confirmar Contraseña" %}
+        {% endslot %}
+      {% endelement %}
+
+      <!-- Terms and Conditions -->
+      <div class="allauth-form-group">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+          <label class="form-check-label" for="terms">
+            {% trans "Acepto los" %}
+            <a href="#" class="allauth-footer-link">{% trans "términos y condiciones" %}</a>
+            {% trans "y la" %}
+            <a href="#" class="allauth-footer-link">{% trans "política de privacidad" %}</a>
+          </label>
+        </div>
+      </div>
+
+      <!-- Newsletter subscription -->
+      <div class="allauth-form-group">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" checked>
+          <label class="form-check-label" for="newsletter">
+            {% trans "Quiero recibir noticias y ofertas especiales por email" %}
+          </label>
+        </div>
+      </div>
+
+      {% element button type="submit" tags="primary,signup" %}
+        <i class="fas fa-user-plus me-2"></i>{% trans "Crear Cuenta Gratis" %}
+      {% endelement %}
+  </form>
+
+  <!-- Social Signup Section -->
+  {% load socialaccount %}
+  {% get_providers as socialaccount_providers %}
+  {% if socialaccount_providers %}
+    <div class="allauth-divider">
+      <span>{% trans "o regístrate con" %}</span>
+    </div>
+
+    {% for provider in socialaccount_providers %}
+      {% if provider.id == "google" %}
+        <a href="{% provider_login_url provider.id %}" class="allauth-social-btn google">
+          <i class="fab fa-google"></i>
+          {% trans "Registrarse con Google" %}
+        </a>
+      {% elif provider.id == "facebook" %}
+        <a href="{% provider_login_url provider.id %}" class="allauth-social-btn facebook">
+          <i class="fab fa-facebook-f"></i>
+          {% trans "Registrarse con Facebook" %}
+        </a>
+      {% elif provider.id == "github" %}
+        <a href="{% provider_login_url provider.id %}" class="allauth-social-btn github">
+          <i class="fab fa-github"></i>
+          {% trans "Registrarse con GitHub" %}
+        </a>
+      {% else %}
+        <a href="{% provider_login_url provider.id %}" class="allauth-social-btn">
+          <i class="fas fa-user-plus"></i>
+          {% trans "Registrarse con" %} {{ provider.name }}
+        </a>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endblock content %}
+
+{% block allauth_footer %}
+  <p class="allauth-footer-text">
+    {% trans "¿Ya tienes una cuenta?" %}
+  </p>
+  <a href="{% url 'account_login' %}" class="allauth-footer-link">
+    <i class="fas fa-sign-in-alt me-2"></i>{% trans "Iniciar sesión" %}
+  </a>
+{% endblock allauth_footer %}

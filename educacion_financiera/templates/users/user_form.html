@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block title %}
+  {% if form.instance.pk %}
+    {% translate "Edit Profile" %} - {{ user.name }}
+  {% else %}
+    {% translate "Create Profile" %}
+  {% endif %}
+{% endblock title %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="profile-form-container">
+  <div class="container">
+    <div class="form-card">
+      <!-- Header with avatar -->
+      <div class="form-header">
+        {% if user.profile.photo %}
+          <img src="{{ user.profile.photo.url }}"
+               class="profile-avatar"
+               alt="{{ user.name }}">
+        {% else %}
+          <div class="avatar-placeholder">
+            {{ user.name|first|upper }}
+          </div>
+        {% endif %}
+
+        <h2 class="form-title">
+          {% if form.instance.pk %}
+            {% translate "Edit Your Profile" %}
+          {% else %}
+            {% translate "Complete Your Profile" %}
+          {% endif %}
+        </h2>
+        <p class="form-subtitle">
+          {% translate "Keep your information up to date to get the best learning experience" %}
+        </p>
+      </div>
+
+      <!-- Form body -->
+      <div class="form-body">
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+
+          <!-- Personal Information Section -->
+          <div class="form-section">
+            <h4 class="section-title">
+              <i class="fas fa-user"></i>
+              {% translate "Personal Information" %}
+            </h4>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label" for="{{ form.first_name.id_for_label }}">
+                    {% translate "First Name" %} *
+                  </label>
+                  {{ form.first_name }}
+                  {% if form.first_name.errors %}
+                    <div class="invalid-feedback">
+                      {{ form.first_name.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label" for="{{ form.last_name.id_for_label }}">
+                    {% translate "Last Name" %} *
+                  </label>
+                  {{ form.last_name }}
+                  {% if form.last_name.errors %}
+                    <div class="invalid-feedback">
+                      {{ form.last_name.errors.0 }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="{{ form.email.id_for_label }}">
+                {% translate "Email Address" %} *
+              </label>
+              {{ form.email }}
+              {% if form.email.errors %}
+                <div class="invalid-feedback">
+                  {{ form.email.errors.0 }}
+                </div>
+              {% endif %}
+              <div class="help-text">
+                {% translate "We'll use this email for important notifications about your courses" %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Information Section -->
+          {% if form.profile %}
+          <div class="form-section">
+            <h4 class="section-title">
+              <i class="fas fa-id-card"></i>
+              {% translate "Profile Information" %}
+            </h4>
+
+            {% if form.profile.photo %}
+            <div class="form-group">
+              <label class="form-label">{% translate "Profile Photo" %}</label>
+              <div class="upload-area" onclick="document.getElementById('{{ form.profile.photo.id_for_label }}').click();">
+                <i class="fas fa-camera upload-icon"></i>
+                <p class="mb-0">{% translate "Click to upload a new photo" %}</p>
+                <small class="text-muted">{% translate "JPG, PNG or GIF (max 5MB)" %}</small>
+              </div>
+              {{ form.profile.photo }}
+              {% if form.profile.photo.errors %}
+                <div class="invalid-feedback">
+                  {{ form.profile.photo.errors.0 }}
+                </div>
+              {% endif %}
+            </div>
+            {% endif %}
+
+            {% if form.profile.bio %}
+            <div class="form-group">
+              <label class="form-label" for="{{ form.profile.bio.id_for_label }}">
+                {% translate "Bio" %}
+              </label>
+              {{ form.profile.bio }}
+              {% if form.profile.bio.errors %}
+                <div class="invalid-feedback">
+                  {{ form.profile.bio.errors.0 }}
+                </div>
+              {% endif %}
+              <div class="help-text">
+                {% translate "Tell others about yourself and your learning goals" %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+
+          <!-- Account Settings Section -->
+          <div class="form-section">
+            <h4 class="section-title">
+              <i class="fas fa-cog"></i>
+              {% translate "Account Settings" %}
+            </h4>
+
+            {% if form.username %}
+            <div class="form-group">
+              <label class="form-label" for="{{ form.username.id_for_label }}">
+                {% translate "Username" %} *
+              </label>
+              {{ form.username }}
+              {% if form.username.errors %}
+                <div class="invalid-feedback">
+                  {{ form.username.errors.0 }}
+                </div>
+              {% endif %}
+              <div class="help-text">
+                {% translate "This will be your unique identifier on the platform" %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Action buttons -->
+          <div class="row mt-4">
+            <div class="col-md-6">
+              <a href="{% url 'users:detail' user.id %}" class="btn btn-cancel">
+                <i class="fas fa-arrow-left me-2"></i>
+                {% translate "Cancel" %}
+              </a>
+            </div>
+            <div class="col-md-6">
+              <button type="submit" class="btn btn-update">
+                <i class="fas fa-save me-2"></i>
+                {% if form.instance.pk %}
+                  {% translate "Update Profile" %}
+                {% else %}
+                  {% translate "Create Profile" %}
+                {% endif %}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success/Error Messages -->
+{% if messages %}
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/user.js' %}"></script>
+{% endblock extra_js %}

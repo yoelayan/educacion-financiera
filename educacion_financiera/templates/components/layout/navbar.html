@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg navbar-custom{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}{% if attrs.sticky %} fixed-top{% endif %}"
+     {% if attrs.id %}id="{{ attrs.id }}"{% endif %}>
+
+  <div class="container{% if attrs.fluid %}-fluid{% endif %}">
+    <!-- Brand -->
+    {% if slots.brand or attrs.brand_text or attrs.logo %}
+      <a class="navbar-brand" href="{{ attrs.brand_url|default:'/' }}">
+        {% if slots.brand %}
+          {% for slot_content in slots.brand %}{{ slot_content|safe }}{% endfor %}
+        {% else %}
+          {% if attrs.logo %}
+            <img src="{{ attrs.logo }}" alt="{{ attrs.brand_text|default:'Logo' }}" height="{{ attrs.logo_height|default:'30' }}">
+          {% endif %}
+          {% if attrs.brand_text %}
+            {{ attrs.brand_text }}
+          {% endif %}
+        {% endif %}
+      </a>
+    {% endif %}
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarContent"
+            aria-controls="navbarContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- Navigation Links -->
+      {% if slots.navigation %}
+        <ul class="navbar-nav me-auto">
+          {% for slot_content in slots.navigation %}{{ slot_content|safe }}{% endfor %}
+        </ul>
+      {% endif %}
+
+      <!-- Search Bar (if provided) -->
+      {% if slots.search %}
+        <div class="navbar-search me-3">
+          {% for slot_content in slots.search %}{{ slot_content|safe }}{% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- User Menu -->
+      {% if slots.user_menu %}
+        <ul class="navbar-nav">
+          {% for slot_content in slots.user_menu %}{{ slot_content|safe }}{% endfor %}
+        </ul>
+      {% endif %}
+
+      <!-- Actions -->
+      {% if slots.actions %}
+        <div class="navbar-actions">
+          {% for slot_content in slots.actions %}{{ slot_content|safe }}{% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</nav>

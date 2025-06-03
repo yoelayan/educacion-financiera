@@ -1,0 +1,113 @@
+{% load allauth %}
+{% if attrs.field.field.widget.input_type == "textarea" or attrs.field.field.widget|stringformat:"s" == "<class 'django.forms.widgets.Textarea'>" %}
+  <div class="allauth-form-group">
+    <label for="{{ attrs.field.id_for_label }}">
+      {% slot label %}
+    {% endslot %}
+  </label>
+    <textarea {% if attrs.field.field.required %}required{% endif %}
+              {% if attrs.field.widget.attrs.rows %}rows="{{ attrs.field.widget.attrs.rows }}"{% endif %}
+              {% if attrs.field.widget.attrs.disabled %}disabled{% endif %}
+              {% if attrs.field.widget.attrs.readonly %}readonly{% endif %}
+              name="{{ attrs.field.html_name }}"
+              id="{{ attrs.field.id_for_label }}"
+              {% if attrs.field.widget.attrs.placeholder %}placeholder="{{ attrs.field.widget.attrs.placeholder }}"{% endif %}
+              class="form-control">{{ attrs.field.value|default_if_none:"" }}</textarea>
+    {% if attrs.field.help_text %}
+      <div class="form-text">{{ attrs.field.help_text }}</div>
+    {% endif %}
+    {% if attrs.field.errors %}
+      <div class="invalid-feedback d-block">
+        {% for error in attrs.field.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% elif attrs.field.field.widget.input_type == "checkbox" %}
+  <div class="allauth-form-group">
+    <div class="form-check">
+      <input {% if attrs.field.field.required %}required{% endif %}
+             {% if attrs.field.widget.attrs.disabled %}disabled{% endif %}
+             {% if attrs.field.widget.attrs.readonly %}readonly{% endif %}
+             {% if attrs.field.value %}checked{% endif %}
+             name="{{ attrs.field.html_name }}"
+             id="{{ attrs.field.id_for_label }}"
+             {% if attrs.field.widget.attrs.autocomplete %}autocomplete="{{ attrs.field.widget.attrs.autocomplete }}"{% endif %}
+             value="{{ attrs.field.widget.attrs.value|default:"on" }}"
+             type="checkbox"
+             class="form-check-input" />
+      <label class="form-check-label" for="{{ attrs.field.id_for_label }}">
+        {% slot label %}
+        {% endslot %}
+      </label>
+    </div>
+    {% if attrs.field.help_text %}
+      <div class="form-text">{{ attrs.field.help_text }}</div>
+    {% endif %}
+    {% if attrs.field.errors %}
+      <div class="invalid-feedback d-block">
+        {% for error in attrs.field.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% elif attrs.field.field.widget.input_type == "radio" %}
+  <div class="allauth-form-group">
+    <div class="form-check">
+      <input {% if attrs.field.field.required %}required{% endif %}
+             {% if attrs.field.widget.attrs.disabled %}disabled{% endif %}
+             {% if attrs.field.widget.attrs.readonly %}readonly{% endif %}
+             {% if attrs.field.value == attrs.field.widget.attrs.value %}checked{% endif %}
+             name="{{ attrs.field.html_name }}"
+             id="{{ attrs.field.id_for_label }}"
+             {% if attrs.field.widget.attrs.placeholder %}placeholder="{{ attrs.field.widget.attrs.placeholder }}"{% endif %}
+             {% if attrs.field.widget.attrs.autocomplete %}autocomplete="{{ attrs.field.widget.attrs.autocomplete }}"{% endif %}
+             value="{{ attrs.field.widget.attrs.value|default_if_none:"" }}"
+             type="radio"
+             class="form-check-input" />
+      <label class="form-check-label" for="{{ attrs.field.id_for_label }}">
+        {% slot label %}
+        {% endslot %}
+      </label>
+    </div>
+    {% if attrs.field.help_text %}
+      <div class="form-text">{{ attrs.field.help_text }}</div>
+    {% endif %}
+    {% if attrs.field.errors %}
+      <div class="invalid-feedback d-block">
+        {% for error in attrs.field.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% else %}
+  <div class="allauth-form-group">
+    <label for="{{ attrs.field.id_for_label }}">
+      {% slot label %}
+      {% endslot %}
+    </label>
+    <input {% if attrs.field.field.required %}required{% endif %}
+           {% if attrs.field.widget.attrs.disabled %}disabled{% endif %}
+           {% if attrs.field.widget.attrs.readonly %}readonly{% endif %}
+           name="{{ attrs.field.html_name }}"
+           id="{{ attrs.field.id_for_label }}"
+           {% if attrs.field.widget.attrs.placeholder %}placeholder="{{ attrs.field.widget.attrs.placeholder }}"{% endif %}
+           {% if attrs.field.widget.attrs.autocomplete %}autocomplete="{{ attrs.field.widget.attrs.autocomplete }}"{% endif %}
+           value="{{ attrs.field.value|default_if_none:"" }}"
+           type="{{ attrs.field.widget.input_type|default:"text" }}"
+           class="form-control{% if attrs.field.errors %} is-invalid{% endif %}" />
+    {% if attrs.field.help_text %}
+      <div class="form-text">{{ attrs.field.help_text }}</div>
+    {% endif %}
+    {% if attrs.field.errors %}
+      <div class="invalid-feedback">
+        {% for error in attrs.field.errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

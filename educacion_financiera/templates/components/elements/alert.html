@@ -1,0 +1,22 @@
+<div class="alert alert-{{ attrs.variant|default:'info' }}{% if attrs.dismissible %} alert-dismissible fade show{% endif %}{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}"
+     role="alert"
+     {% if attrs.id %}id="{{ attrs.id }}"{% endif %}>
+
+  {% if attrs.icon %}
+    <i class="bi bi-{{ attrs.icon }} me-2"></i>
+  {% endif %}
+
+  {% if attrs.title %}
+    <h6 class="alert-heading">{{ attrs.title }}</h6>
+  {% endif %}
+
+  {% if slots.default %}
+    {% for slot_content in slots.default %}{{ slot_content|safe }}{% endfor %}
+  {% elif attrs.message %}
+    {{ attrs.message }}
+  {% endif %}
+
+  {% if attrs.dismissible %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  {% endif %}
+</div>

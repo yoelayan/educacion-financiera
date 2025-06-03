@@ -1,0 +1,67 @@
+{% extends "allauth/layouts/entrance.html" %}
+{% load i18n allauth %}
+{% load socialaccount %}
+
+{% block allauth_title %}
+  {% trans "Confirmar Email" %}
+{% endblock allauth_title %}
+
+{% block allauth_subtitle %}
+  {% trans "Por favor confirma tu dirección de correo electrónico" %}
+{% endblock allauth_subtitle %}
+
+{% block content %}
+  {% if confirmation %}
+    <div class="text-center py-4">
+      <div class="mb-4">
+        <i class="fas fa-envelope-open-text text-primary" style="font-size: 4rem;"></i>
+      </div>
+
+      <div class="allauth-alert allauth-alert-info">
+        <p class="mb-2">
+          <strong>{% trans "Confirma tu dirección de email:" %}</strong>
+        </p>
+        <p class="mb-0">
+          <code>{{ confirmation.email_address.email }}</code>
+        </p>
+      </div>
+
+      {% element form form=form method="post" %}
+        {% csrf_token %}
+        {% slot body %}
+          {% csrf_token %}
+        {% endslot %}
+        {% slot actions %}
+          {% element button type="submit" tags="primary,confirm" %}
+            <i class="fas fa-check me-2"></i>{% trans "Confirmar Email" %}
+          {% endelement %}
+        {% endslot %}
+      {% endelement %}
+    </div>
+  {% else %}
+    <div class="text-center py-4">
+      <div class="mb-4">
+        <i class="fas fa-exclamation-triangle text-warning" style="font-size: 4rem;"></i>
+      </div>
+
+      <div class="allauth-alert allauth-alert-error">
+        <p class="mb-0">
+          {% trans "El enlace de confirmación no es válido o ha expirado." %}
+        </p>
+      </div>
+    </div>
+  {% endif %}
+{% endblock content %}
+
+{% block allauth_footer %}
+  <p class="allauth-footer-text">
+    {% trans "¿Problemas con la confirmación?" %}
+  </p>
+  <a href="{% url 'account_email' %}" class="allauth-footer-link">
+    <i class="fas fa-envelope me-2"></i>{% trans "Gestionar emails" %}
+  </a>
+  <span class="mx-2">|</span>
+  <a href="{% url 'account_login' %}" class="allauth-footer-link">
+    <i class="fas fa-sign-in-alt me-2"></i>{% trans "Iniciar sesión" %}
+  </a>
+{% endblock allauth_footer %}

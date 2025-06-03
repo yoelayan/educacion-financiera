@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ category.name }} - {% translate "Courses" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <!-- Breadcrumbs -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'courses:course_list' %}">{% translate "Courses" %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ category.name }}</li>
+    </ol>
+  </nav>
+
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h1 class="display-5">{{ category.name }}</h1>
+      {% if category.description %}
+        <p class="lead">{{ category.description }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    {% if courses %}
+      {% for course in courses %}
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            {% if course.image %}
+              <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}">
+            {% else %}
+              <img src="{% static 'images/course-placeholder.jpg' %}" class="card-img-top" alt="{{ course.title }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ course.title }}</h5>
+              <p class="card-text text-muted">{{ course.overview|truncatewords:15 }}</p>
+
+              <div class="d-flex justify-content-between align-items-center">
+                {% if course.price > 0 %}
+                  <span class="badge bg-primary">{{ course.price }} USD</span>
+                {% else %}
+                  <span class="badge bg-success">{% translate "Free" %}</span>
+                {% endif %}
+                <small class="text-muted">{{ course.instructor.name }}</small>
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="{% url 'courses:course_detail' course.slug %}" class="btn btn-outline-primary w-100">
+                {% translate "View Course" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="col-md-12">
+        <div class="alert alert-info">
+          {% translate "No courses available in this category yet." %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

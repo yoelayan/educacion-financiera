@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ object.name }} - {% translate "Profile" %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div class="profile-container">
+  <div class="container">
+    <div class="row">
+      <!-- User Profile Header -->
+      <div class="col-12">
+        <div class="profile-header">
+          <div class="row align-items-center">
+            <div class="col-md-3 text-center">
+              {% if object.profile.photo %}
+                <img src="{{ object.profile.photo.url }}"
+                     class="profile-avatar-large"
+                     alt="{{ object.name }}">
+              {% else %}
+                <div class="avatar-placeholder-large">
+                  {{ object.name|first|upper }}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-9">
+              <div class="profile-info">
+                <h1 class="profile-name">{{ object.name }}</h1>
+                <p class="profile-email">{{ object.email }}</p>
+
+                <span class="role-badge {% if object.profile.is_instructor %}role-instructor{% else %}role-student{% endif %}">
+                  {{ object.profile.get_role_display }}
+                </span>
+
+                <div class="profile-stats">
+                  <div class="stat-item">
+                    <span class="stat-number">{{ object.enrollments.count }}</span>
+                    <span class="stat-label">{% translate "Courses" %}</span>
+                  </div>
+                  {% if object.profile.is_instructor %}
+                  <div class="stat-item">
+                    <span class="stat-number">{{ object.courses_created.count }}</span>
+                    <span class="stat-label">{% translate "Created" %}</span>
+                  </div>
+                  {% endif %}
+                  <div class="stat-item">
+                    <span class="stat-number">{{ object.date_joined|date:"Y" }}</span>
+                    <span class="stat-label">{% translate "Member Since" %}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-body">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 p-4">
+          <div class="sidebar-card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="fas fa-user-cog me-2"></i>
+                {% translate "Account" %}
+              </h5>
+            </div>
+            <div class="list-group list-group-flush">
+              <div class="nav-item">
+                <a href="{% url 'users:update' %}" class="nav-link">
+                  <span>{% translate "Edit Profile" %}</span>
+                  <i class="fas fa-user-edit"></i>
+                </a>
+              </div>
+              <div class="nav-item">
+                <a href="#" class="nav-link">
+                  <span>{% translate "Subscriptions" %}</span>
+                  <i class="fas fa-crown"></i>
+                </a>
+              </div>
+              <div class="nav-item">
+                <a href="#" class="nav-link">
+                  <span>{% translate "Payments" %}</span>
+                  <i class="fas fa-credit-card"></i>
+                </a>
+              </div>
+              <div class="nav-item">
+                <a href="#" class="nav-link">
+                  <span>{% translate "Certificates" %}</span>
+                  <i class="fas fa-certificate"></i>
+                </a>
+              </div>
+              <div class="nav-item">
+                <a href="#" class="nav-link">
+                  <span>{% translate "Settings" %}</span>
+                  <i class="fas fa-cog"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 p-4">
+          <!-- Subscription Information -->
+          <div class="content-card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="fas fa-crown me-2"></i>
+                {% translate "Current Subscription" %}
+              </h5>
+            </div>
+            <div class="card-body">
+              {% if user.subscriptions.exists %}
+                {% with subscription=user.subscriptions.first %}
+                  {% if subscription.status == 'active' %}
+                    <div class="subscription-card">
+                      <h4 class="subscription-title">{{ subscription.subscription_type.name }}</h4>
+                      <p class="subscription-status">
+                        {% if subscription.end_date %}
+                          {% blocktranslate with end_date=subscription.end_date|date:"F j, Y" %}Active until {{ end_date }}{% endblocktranslate %}
+                        {% else %}
+                          {% translate "Lifetime access" %}
+                        {% endif %}
+                      </p>
+
+                      <div class="progress-custom">
+                        {% if subscription.end_date %}
+                          {% with days_left=subscription.end_date|timeuntil %}
+                            <div class="progress-bar-custom" style="width: 75%;">
+                              <span class="text-white fw-bold ps-2">{{ days_left }} {% translate "left" %}</span>
+                            </div>
+                          {% endwith %}
+                        {% else %}
+                          <div class="progress-bar-custom" style="width: 100%;">
+                            <span class="text-white fw-bold ps-2">{% translate "Unlimited" %}</span>
+                          </div>
+                        {% endif %}
+                      </div>
+
+                      <a href="#" class="btn btn-primary-custom">
+                        <i class="fas fa-cog me-2"></i>
+                        {% translate "Manage Subscription" %}
+                      </a>
+                    </div>
+                  {% else %}
+                    <div class="alert alert-warning border-0 rounded-3">
+                      <i class="fas fa-exclamation-triangle me-2"></i>
+                      {% translate "Your subscription is not active. Please renew or upgrade your subscription." %}
+                    </div>
+                    <a href="#" class="btn btn-primary-custom">
+                      <i class="fas fa-arrow-up me-2"></i>
+                      {% translate "Upgrade Subscription" %}
+                    </a>
+                  {% endif %}
+                {% endwith %}
+              {% else %}
+                <div class="alert alert-info border-0 rounded-3">
+                  <i class="fas fa-info-circle me-2"></i>
+                  {% translate "You do not have an active subscription. Subscribe to access premium content." %}
+                </div>
+                <a href="#" class="btn btn-primary-custom">
+                  <i class="fas fa-star me-2"></i>
+                  {% translate "Browse Plans" %}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- My Courses -->
+          <div class="content-card">
+            <div class="card-header">
+              <div class="d-flex justify-content-between align-items-center w-100">
+                <h5 class="mb-0">
+                  <i class="fas fa-graduation-cap me-2"></i>
+                  {% translate "My Courses" %}
+                </h5>
+                <a href="{% url 'courses:course_list' %}" class="btn btn-success-custom">
+                  <i class="fas fa-search me-2"></i>
+                  {% translate "Find More" %}
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              {% if user.enrollments.exists %}
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                  {% for enrollment in user.enrollments.all %}
+                    {% with course=enrollment.course %}
+                      <div class="col">
+                        <div class="course-card">
+                          {% if course.image %}
+                            <img src="{{ course.image.url }}" class="course-image" alt="{{ course.title }}">
+                          {% else %}
+                            <div class="course-placeholder">
+                              <i class="fas fa-book fa-3x text-muted"></i>
+                            </div>
+                          {% endif %}
+
+                          <div class="course-body">
+                            <h5 class="course-title">{{ course.title }}</h5>
+                            <p class="course-instructor">
+                              <i class="fas fa-user-tie me-1"></i>
+                              {{ course.instructor.name }}
+                            </p>
+
+                            <div class="course-progress">
+                              <div class="course-progress-bar" style="width: 25%;"></div>
+                            </div>
+                            <p class="text-end mb-0">
+                              <small class="text-muted">25% {% translate "complete" %}</small>
+                            </p>
+                          </div>
+
+                          <div class="course-footer">
+                            <a href="{% url 'courses:course_detail' course.slug %}" class="btn btn-continue">
+                              <i class="fas fa-play me-2"></i>
+                              {% translate "Continue Learning" %}
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    {% endwith %}
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="empty-state">
+                  <i class="fas fa-book-open empty-state-icon"></i>
+                  <h5 class="empty-state-title">{% translate "Start Your Learning Journey" %}</h5>
+                  <p class="empty-state-text">
+                    {% translate "You haven't enrolled in any courses yet. Discover amazing courses and start learning today!" %}
+                  </p>
+                  <a href="{% url 'courses:course_list' %}" class="btn btn-primary-custom">
+                    <i class="fas fa-rocket me-2"></i>
+                    {% translate "Explore Courses" %}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Instructor Section -->
+          {% if object.profile.is_instructor %}
+            <div class="content-card">
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center w-100">
+                  <h5 class="mb-0">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                    {% translate "My Courses (Instructor)" %}
+                  </h5>
+                  <a href="#" class="btn btn-success-custom">
+                    <i class="fas fa-plus me-2"></i>
+                    {% translate "Create Course" %}
+                  </a>
+                </div>
+              </div>
+              <div class="card-body">
+                {% if object.courses_created.exists %}
+                  <div class="table-responsive">
+                    <table class="table instructor-table">
+                      <thead>
+                        <tr>
+                          <th>{% translate "Course" %}</th>
+                          <th>{% translate "Status" %}</th>
+                          <th>{% translate "Students" %}</th>
+                          <th>{% translate "Created" %}</th>
+                          <th>{% translate "Actions" %}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for course in object.courses_created.all %}
+                          <tr>
+                            <td>
+                              <div class="d-flex align-items-center">
+                                {% if course.image %}
+                                  <img src="{{ course.image.url }}" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;" alt="{{ course.title }}">
+                                {% else %}
+                                  <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-book text-muted"></i>
+                                  </div>
+                                {% endif %}
+                                <div>
+                                  <div class="fw-bold">{{ course.title }}</div>
+                                  <small class="text-muted">{{ course.description|truncatechars:50 }}</small>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <span class="status-badge status-{% if course.visibility == 'public' %}public{% elif course.visibility == 'private' %}private{% else %}draft{% endif %}">
+                                {{ course.get_visibility_display }}
+                              </span>
+                            </td>
+                            <td>
+                              <span class="fw-bold">{{ course.enrollments.count }}</span>
+                              <small class="text-muted d-block">{% translate "enrolled" %}</small>
+                            </td>
+                            <td>{{ course.created|date:"M d, Y" }}</td>
+                            <td>
+                              <div class="d-flex">
+                                <a href="{% url 'courses:course_detail' course.slug %}" class="action-btn btn-view" title="{% translate 'View Course' %}">
+                                  <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="#" class="action-btn btn-edit" title="{% translate 'Edit Course' %}">
+                                  <i class="fas fa-edit"></i>
+                                </a>
+                              </div>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                {% else %}
+                  <div class="empty-state">
+                    <i class="fas fa-chalkboard-teacher empty-state-icon"></i>
+                    <h5 class="empty-state-title">{% translate "Share Your Knowledge" %}</h5>
+                    <p class="empty-state-text">
+                      {% translate "You haven't created any courses yet. Start teaching and inspire others with your expertise!" %}
+                    </p>
+                    <a href="#" class="btn btn-primary-custom">
+                      <i class="fas fa-plus me-2"></i>
+                      {% translate "Create Your First Course" %}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/user.js' %}"></script>
+{% endblock extra_js %}

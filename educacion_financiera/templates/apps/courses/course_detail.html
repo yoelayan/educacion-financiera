@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <!-- Course details -->
+    <div class="col-md-8">
+      <div class="card mb-4">
+        {% if course.image %}
+          <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}">
+        {% else %}
+          <img src="{% static 'images/course-placeholder.jpg' %}" class="card-img-top" alt="{{ course.title }}">
+        {% endif %}
+
+        <div class="card-body">
+          <h1 class="card-title">{{ course.title }}</h1>
+          <p class="text-muted">{% translate "Category" %}:
+            <a href="{% url 'courses:category_detail' course.category.slug %}">{{ course.category.name }}</a>
+          </p>
+
+          <div class="mb-4">
+            <h5>{% translate "Overview" %}</h5>
+            <p>{{ course.overview|linebreaks }}</p>
+          </div>
+
+          <div class="mb-4">
+            <h5>{% translate "Course Content" %}</h5>
+            <div class="accordion" id="accordionModules">
+              {% for module in modules %}
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading{{ module.id }}">
+                    <button class="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapse{{ module.id }}"
+                            aria-expanded="false" aria-controls="collapse{{ module.id }}">
+                      <strong>{{ forloop.counter }}. {{ module.title }}</strong>
+                    </button>
+                  </h2>
+                  <div id="collapse{{ module.id }}" class="accordion-collapse collapse"
+                       aria-labelledby="heading{{ module.id }}" data-bs-parent="#accordionModules">
+                    <div class="accordion-body">
+                      <p>{{ module.description|linebreaks }}</p>
+
+                      {% if is_enrolled %}
+                        <a href="{% url 'courses:module_detail' course.slug module.id %}"
+                           class="btn btn-sm btn-outline-primary">
+                          {% translate "Start Module" %}
+                        </a>
+                      {% endif %}
+
+                      <div class="mt-3">
+                        <h6>{% translate "Lessons" %}:</h6>
+                        <ul class="list-group">
+                          {% for lesson in module.lessons.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                              {{ lesson.title }}
+                              {% if is_enrolled %}
+                                <a href="{% url 'courses:lesson_detail' course.slug module.id lesson.id %}"
+                                   class="btn btn-sm btn-link">
+                                  {% translate "View" %}
+                                </a>
+                              {% endif %}
+                            </li>
+                          {% empty %}
+                            <li class="list-group-item">{% translate "No lessons available yet" %}</li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% empty %}
+                <div class="alert alert-info">
+                  {% translate "No modules available for this course yet" %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>{% translate "Course Information" %}</h5>
+        </div>
+        <div class="card-body">
+          <p>
+            <strong>{% translate "Instructor" %}:</strong> {{ course.instructor.name }}
+          </p>
+          <p>
+            <strong>{% translate "Category" %}:</strong> {{ course.category.name }}
+          </p>
+          <p>
+            <strong>{% translate "Created" %}:</strong> {{ course.created|date:"F j, Y" }}
+          </p>
+          <p>
+            <strong>{% translate "Last Updated" %}:</strong> {{ course.modified|date:"F j, Y" }}
+          </p>
+          <p>
+            <strong>{% translate "Price" %}:</strong>
+            {% if course.price > 0 %}
+              {{ course.price }} USD
+            {% else %}
+              {% translate "Free" %}
+            {% endif %}
+          </p>
+        </div>
+        <div class="card-footer">
+          {% if is_enrolled %}
+            <div class="alert alert-success mb-3">
+              {% translate "You are enrolled in this course" %}
+            </div>
+            <a href="{% url 'courses:module_detail' course.slug modules.first.id %}"
+               class="btn btn-primary w-100">
+              {% translate "Continue Learning" %}
+            </a>
+          {% else %}
+            <form method="post" action="{% url 'courses:course_enroll' course.slug %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary w-100">
+                {% if course.price > 0 %}
+                  {% translate "Purchase Course" %}
+                {% else %}
+                  {% translate "Enroll Now (Free)" %}
+                {% endif %}
+              </button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>{% translate "About the Instructor" %}</h5>
+        </div>
+        <div class="card-body">
+          {% if course.instructor.profile.photo %}
+            <img src="{{ course.instructor.profile.photo.url }}"
+                 class="rounded-circle mx-auto d-block mb-3"
+                 alt="{{ course.instructor.name }}"
+                 style="width: 100px; height: 100px; object-fit: cover;">
+          {% endif %}
+
+          <h5 class="text-center mb-3">{{ course.instructor.name }}</h5>
+
+          {% if course.instructor.profile.bio %}
+            <p>{{ course.instructor.profile.bio|linebreaks }}</p>
+          {% else %}
+            <p class="text-muted">{% translate "No biography available" %}</p>
+          {% endif %}
+
+          {% if course.instructor.profile.website or course.instructor.profile.twitter or course.instructor.profile.linkedin %}
+            <div class="social-links text-center">
+              {% if course.instructor.profile.website %}
+                <a href="{{ course.instructor.profile.website }}" target="_blank" class="me-2">
+                  <i class="fas fa-globe"></i>
+                </a>
+              {% endif %}
+
+              {% if course.instructor.profile.twitter %}
+                <a href="https://twitter.com/{{ course.instructor.profile.twitter }}" target="_blank" class="me-2">
+                  <i class="fab fa-twitter"></i>
+                </a>
+              {% endif %}
+
+              {% if course.instructor.profile.linkedin %}
+                <a href="https://linkedin.com/in/{{ course.instructor.profile.linkedin }}" target="_blank">
+                  <i class="fab fa-linkedin"></i>
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

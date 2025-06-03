@@ -1,0 +1,823 @@
+/* ==========================================================================
+   ALLAUTH STYLES - PLATZI INSPIRED DESIGN
+   ========================================================================== */
+
+/* AUTHENTICATION LAYOUT STYLES
+   ========================================================================== */
+
+/* Main authentication container */
+.allauth-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-blue) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.allauth-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+  opacity: 0.3;
+}
+
+/* Authentication card */
+.allauth-card {
+  background: var(--white);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  padding: var(--spacing-12);
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Authentication header */
+.allauth-header {
+  text-align: center;
+  margin-bottom: var(--spacing-8);
+}
+
+.allauth-logo {
+  font-size: var(--font-size-3xl);
+  color: var(--primary-green);
+  margin-bottom: var(--spacing-4);
+}
+
+.allauth-title {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--gray-800);
+  margin-bottom: var(--spacing-2);
+}
+
+.allauth-subtitle {
+  color: var(--gray-600);
+  font-size: var(--font-size-base);
+  margin-bottom: 0;
+}
+
+/* FORM STYLES
+   ========================================================================== */
+
+/* Form container */
+.allauth-form {
+  margin-bottom: var(--spacing-6);
+}
+
+/* Form groups */
+.allauth-form-group {
+  margin-bottom: var(--spacing-6);
+}
+
+/* Labels */
+.allauth-form label {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  color: var(--gray-700);
+  margin-bottom: var(--spacing-2);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Input fields */
+.allauth-form .form-control {
+  width: 100%;
+  padding: var(--spacing-4);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast);
+  background-color: var(--gray-50);
+  font-family: var(--font-family-base);
+}
+
+.allauth-form .form-control:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  background-color: var(--gray-50);
+  box-shadow: 0 0 0 3px rgba(152, 202, 63, 0.1);
+  transform: translateY(-1px);
+}
+
+.allauth-form .form-control::placeholder {
+  color: var(--gray-400);
+  font-style: italic;
+}
+
+/* Checkbox and radio styles */
+.allauth-form .form-check {
+  margin-bottom: var(--spacing-4);
+  display: flex;
+  align-items: center;
+}
+
+.allauth-form .form-check-input {
+  width: 20px;
+  height: 20px;
+  margin-right: var(--spacing-3);
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  background-color: var(--white);
+  transition: all var(--transition-fast);
+}
+
+.allauth-form .form-check-input:checked {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+.allauth-form .form-check-label {
+  color: var(--gray-300);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  text-transform: none;
+  letter-spacing: normal;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+/* Help text */
+.allauth-form .form-text {
+  color: var(--gray-500);
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-2);
+  font-style: italic;
+}
+
+/* Error states */
+.allauth-form .form-control.is-invalid {
+  border-color: #dc3545;
+  background-color: var(--gray-50);
+}
+
+.allauth-form .invalid-feedback {
+  color: #dc3545;
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-2);
+}
+
+/* BUTTON STYLES
+   ========================================================================== */
+
+/* Primary button (submit) */
+.allauth-btn-primary {
+  width: 100%;
+  padding: var(--spacing-4) var(--spacing-6);
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+  border: none;
+  border-radius: var(--radius-lg);
+  color: var(--white);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.allauth-btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left var(--transition-normal);
+}
+
+.allauth-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, var(--primary-green-dark) 0%, var(--primary-green) 100%);
+}
+
+.allauth-btn-primary:hover::before {
+  left: 100%;
+}
+
+.allauth-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary button */
+.allauth-btn-secondary {
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-6);
+  background: transparent;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  color: var(--gray-700);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.allauth-btn-secondary:hover {
+  border-color: var(--primary-green);
+  color: var(--primary-green);
+  background-color: rgba(152, 202, 63, 0.05);
+  transform: translateY(-1px);
+}
+
+/* Social login buttons */
+.allauth-social-btn {
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-4);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background-color: var(--white);
+  color: var(--gray-700);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  margin-bottom: var(--spacing-3);
+}
+
+.allauth-social-btn:hover {
+  border-color: var(--gray-300);
+  background-color: var(--gray-50);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.allauth-social-btn i {
+  margin-right: var(--spacing-3);
+  font-size: var(--font-size-lg);
+}
+
+/* Google button */
+.allauth-social-btn.google:hover {
+  border-color: #db4437;
+  color: #db4437;
+}
+
+/* Facebook button */
+.allauth-social-btn.facebook:hover {
+  border-color: #4267B2;
+  color: #4267B2;
+}
+
+/* GitHub button */
+.allauth-social-btn.github:hover {
+  border-color: #333;
+  color: #333;
+}
+
+/* ALERT STYLES
+   ========================================================================== */
+
+.allauth-alert {
+  padding: var(--spacing-4);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-6);
+  border: none;
+  font-size: var(--font-size-sm);
+  position: relative;
+}
+
+.allauth-alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.allauth-alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+.allauth-alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border-left: 4px solid #ffc107;
+}
+
+.allauth-alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-left: 4px solid #17a2b8;
+}
+
+/* DIVIDER STYLES
+   ========================================================================== */
+
+.allauth-divider {
+  position: relative;
+  text-align: center;
+  margin: var(--spacing-8) 0;
+}
+
+.allauth-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--gray-200);
+}
+
+.allauth-divider span {
+  background-color: var(--white);
+  padding: 0 var(--spacing-4);
+  color: var(--gray-500);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* FOOTER LINKS
+   ========================================================================== */
+
+.allauth-footer {
+  text-align: center;
+  margin-top: var(--spacing-8);
+  padding-top: var(--spacing-6);
+  border-top: 1px solid var(--gray-200);
+}
+
+.allauth-footer-link {
+  color: var(--primary-green);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+}
+
+.allauth-footer-link:hover {
+  color: var(--primary-green-dark);
+  text-decoration: underline;
+}
+
+.allauth-footer-text {
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-2);
+}
+
+/* PASSWORD STRENGTH INDICATOR
+   ========================================================================== */
+
+.allauth-password-strength {
+  margin-top: var(--spacing-2);
+  height: 4px;
+  background-color: var(--gray-200);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.allauth-password-strength-bar {
+  height: 100%;
+  transition: all var(--transition-normal);
+  border-radius: var(--radius-full);
+}
+
+.allauth-password-strength-weak {
+  width: 25%;
+  background-color: #dc3545;
+}
+
+.allauth-password-strength-medium {
+  width: 50%;
+  background-color: #ffc107;
+}
+
+.allauth-password-strength-strong {
+  width: 75%;
+  background-color: #28a745;
+}
+
+.allauth-password-strength-very-strong {
+  width: 100%;
+  background-color: var(--primary-green);
+}
+
+/* RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .allauth-container {
+    padding: var(--spacing-2);
+  }
+
+  .allauth-card {
+    padding: var(--spacing-8);
+    margin: var(--spacing-4);
+  }
+
+  .allauth-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .allauth-form .form-control {
+    padding: var(--spacing-3);
+  }
+
+  .allauth-btn-primary {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .allauth-card {
+    padding: var(--spacing-6);
+    margin: var(--spacing-2);
+  }
+
+  .allauth-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .allauth-logo {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+/* LOADING STATES
+   ========================================================================== */
+
+.allauth-btn-loading {
+  position: relative;
+  color: transparent !important;
+}
+
+.allauth-btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid var(--white);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ACCESSIBILITY IMPROVEMENTS
+   ========================================================================== */
+
+.allauth-form .form-control:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+
+.allauth-btn-primary:focus,
+.allauth-btn-secondary:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .allauth-card {
+    border: 2px solid var(--gray-800);
+  }
+
+  .allauth-form .form-control {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .allauth-form .form-control,
+  .allauth-btn-primary,
+  .allauth-btn-secondary,
+  .allauth-social-btn {
+    transition: none;
+  }
+
+  .allauth-btn-primary::before {
+    display: none;
+  }
+}
+
+/* ENHANCED INTERACTIVE FEATURES
+   ========================================================================== */
+
+/* Focused form group styling */
+.allauth-form-group.focused label {
+  color: var(--primary-green);
+  transform: translateY(-2px);
+}
+
+.allauth-form-group.focused .form-control {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(152, 202, 63, 0.1);
+}
+
+/* Filled input styling */
+.allauth-form .form-control.filled {
+  border-color: var(--gray-300);
+}
+
+/* Toast notifications */
+.allauth-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: var(--spacing-4) var(--spacing-6);
+  border-radius: var(--radius-lg);
+  color: var(--white);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  z-index: 9999;
+  transform: translateX(100%);
+  transition: transform var(--transition-normal);
+  box-shadow: var(--shadow-lg);
+  max-width: 300px;
+}
+
+.allauth-toast.show {
+  transform: translateX(0);
+}
+
+.allauth-toast-success {
+  background-color: #28a745;
+}
+
+.allauth-toast-error {
+  background-color: #dc3545;
+}
+
+.allauth-toast-warning {
+  background-color: #ffc107;
+  color: var(--gray-800);
+}
+
+.allauth-toast-info {
+  background-color: #17a2b8;
+}
+
+/* Enhanced button states */
+.allauth-btn-primary:disabled,
+.allauth-btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Form validation improvements */
+.allauth-form .form-control.is-invalid {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Social button enhancements */
+.allauth-social-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.allauth-social-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left var(--transition-normal);
+}
+
+.allauth-social-btn:hover::before {
+  left: 100%;
+}
+
+/* Enhanced password strength indicator */
+.allauth-password-strength {
+  position: relative;
+  margin-top: var(--spacing-3);
+}
+
+.allauth-password-strength::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--gray-500);
+}
+
+.allauth-password-strength-bar.allauth-password-strength-weak + .allauth-password-strength::after {
+  content: 'Débil';
+  color: #dc3545;
+}
+
+.allauth-password-strength-bar.allauth-password-strength-medium + .allauth-password-strength::after {
+  content: 'Media';
+  color: #ffc107;
+}
+
+.allauth-password-strength-bar.allauth-password-strength-strong + .allauth-password-strength::after {
+  content: 'Fuerte';
+  color: #28a745;
+}
+
+.allauth-password-strength-bar.allauth-password-strength-very-strong + .allauth-password-strength::after {
+  content: 'Muy fuerte';
+  color: var(--primary-green);
+}
+
+/* Floating label effect */
+.allauth-form-group {
+  position: relative;
+}
+
+.allauth-form-group.floating label {
+  position: absolute;
+  top: 50%;
+  left: var(--spacing-4);
+  transform: translateY(-50%);
+  background-color: var(--white);
+  padding: 0 var(--spacing-2);
+  transition: all var(--transition-fast);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.allauth-form-group.floating.focused label,
+.allauth-form-group.floating .form-control.filled + label {
+  top: 0;
+  font-size: var(--font-size-xs);
+  color: var(--primary-green);
+}
+
+/* Card hover effects */
+.allauth-card {
+  transition: all var(--transition-normal);
+}
+
+.allauth-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Progress indicator for multi-step forms */
+.allauth-progress {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-8);
+  position: relative;
+}
+
+.allauth-progress::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--gray-200);
+  z-index: 1;
+}
+
+.allauth-progress-step {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  color: var(--gray-500);
+  position: relative;
+  z-index: 2;
+  transition: all var(--transition-fast);
+}
+
+.allauth-progress-step.active {
+  background-color: var(--primary-green);
+  color: var(--white);
+}
+
+.allauth-progress-step.completed {
+  background-color: var(--primary-green);
+  color: var(--white);
+}
+
+.allauth-progress-step.completed::after {
+  content: '✓';
+}
+
+/* Enhanced alert styling */
+.allauth-alert {
+  position: relative;
+  overflow: hidden;
+}
+
+.allauth-alert::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: currentColor;
+}
+
+/* Improved checkbox and radio styling */
+.allauth-form .form-check-input {
+  position: relative;
+}
+
+.allauth-form .form-check-input::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background-color: var(--white);
+  opacity: 0;
+  transition: all var(--transition-fast);
+}
+
+.allauth-form .form-check-input:checked::before {
+  background-color: var(--primary-green);
+  opacity: 1;
+}
+
+.allauth-form .form-check-input[type="radio"]::before {
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .allauth-container {
+    background: linear-gradient(135deg, var(--gray-900) 0%, var(--secondary-blue) 100%);
+  }
+
+  .allauth-card {
+    background: var(--gray-800);
+    border-color: var(--gray-700);
+  }
+
+  .allauth-title {
+    color: var(--white);
+  }
+
+  .allauth-subtitle {
+    color: var(--gray-300);
+  }
+
+  .allauth-form .form-control {
+    background-color: var(--gray-700);
+    border-color: var(--gray-600);
+    color: var(--white);
+  }
+
+  .allauth-form .form-control:focus {
+    background-color: var(--gray-600);
+  }
+
+  .allauth-form label {
+    color: var(--gray-300);
+  }
+
+  .allauth-footer-text {
+    color: var(--gray-400);
+  }
+}

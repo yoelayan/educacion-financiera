@@ -1,0 +1,42 @@
+<aside class="sidebar{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}{% if attrs.collapsed %} sidebar-collapsed{% endif %}"
+       {% if attrs.id %}id="{{ attrs.id }}"{% endif %}>
+
+  {% if slots.header or attrs.title %}
+    <div class="sidebar-header">
+      {% if slots.header %}
+        {% for slot_content in slots.header %}{{ slot_content|safe }}{% endfor %}
+      {% elif attrs.title %}
+        <h5 class="sidebar-title">{{ attrs.title }}</h5>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="sidebar-content">
+    {% if slots.navigation %}
+      <nav class="sidebar-nav">
+        {% for slot_content in slots.navigation %}{{ slot_content|safe }}{% endfor %}
+      </nav>
+    {% endif %}
+
+    {% if slots.default %}
+      {% for slot_content in slots.default %}{{ slot_content|safe }}{% endfor %}
+    {% endif %}
+  </div>
+
+  {% if slots.footer %}
+    <div class="sidebar-footer">
+      {% for slot_content in slots.footer %}{{ slot_content|safe }}{% endfor %}
+    </div>
+  {% endif %}
+
+  {% if attrs.collapsible %}
+    <button class="sidebar-toggle btn btn-sm btn-outline-secondary"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#{{ attrs.id|default:'sidebar' }}"
+            aria-expanded="{% if not attrs.collapsed %}true{% else %}false{% endif %}"
+            aria-controls="{{ attrs.id|default:'sidebar' }}">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+  {% endif %}
+</aside>

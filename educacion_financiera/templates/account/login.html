@@ -1,0 +1,100 @@
+{% extends "allauth/layouts/entrance.html" %}
+{% load i18n allauth %}
+
+{% block allauth_title %}
+  {% trans "Iniciar Sesión" %}
+{% endblock allauth_title %}
+
+{% block allauth_subtitle %}
+  {% trans "Accede a tu cuenta para continuar aprendiendo finanzas" %}
+{% endblock allauth_subtitle %}
+
+{% block content %}
+  {% element form form=form method="post" %}
+
+
+    {% slot body %}
+
+      {% csrf_token %}
+      {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+
+      {% element field field=form.login %}
+        {% slot label %}
+          <i class="fas fa-envelope me-2"></i>{% trans "Email o Usuario" %}
+        {% endslot %}
+      {% endelement %}
+
+      {% element field field=form.password%}
+        {% slot label %}
+          <i class="fas fa-lock me-2"></i>{% trans "Contraseña" %}
+        {% endslot %}
+      {% endelement %}
+
+      {% if form.remember %}
+        {% element field field=form.remember %}
+          {% slot label %}
+
+            {% trans "Recordarme" %}
+          {% endslot %}
+        {% endelement %}
+      {% endif %}
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div></div>
+        <a href="{% url 'account_reset_password' %}" class="allauth-footer-link">
+          {% trans "¿Olvidaste tu contraseña?" %}
+        </a>
+      </div>
+    {% endslot %}
+
+    {% slot actions %}
+      {% element button type="submit" tags="primary,login" %}
+        <i class="fas fa-sign-in-alt me-2"></i>{% trans "Iniciar Sesión" %}
+      {% endelement %}
+    {% endslot %}
+  {% endelement %}
+
+  <!-- Social Login Section -->
+  {% load socialaccount %}
+  {% get_providers as socialaccount_providers %}
+  {% if socialaccount_providers %}
+    <div class="allauth-divider">
+      <span>{% trans "o continúa con" %}</span>
+    </div>
+
+    {% for provider in socialaccount_providers %}
+      {% if provider.id == "google" %}
+        <a href="{% provider_login_url provider.id %}" class="allauth-social-btn google">
+          <i class="fab fa-google"></i>
+          {% trans "Continuar con Google" %}
+        </a>
+      {% elif provider.id == "facebook" %}
+        <a href="{% provider_login_url provider.id %}" class="allauth-social-btn facebook">
+          <i class="fab fa-facebook-f"></i>
+          {% trans "Continuar con Facebook" %}
+        </a>
+      {% elif provider.id == "github" %}
+        <a href="{% provider_login_url provider.id %}" class="allauth-social-btn github">
+          <i class="fab fa-github"></i>
+          {% trans "Continuar con GitHub" %}
+        </a>
+      {% else %}
+        <a href="{% provider_login_url provider.id %}" class="allauth-social-btn">
+          <i class="fas fa-sign-in-alt"></i>
+          {% trans "Continuar con" %} {{ provider.name }}
+        </a>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endblock content %}
+
+{% block allauth_footer %}
+  <p class="allauth-footer-text">
+    {% trans "¿No tienes una cuenta?" %}
+  </p>
+  <a href="{% url 'account_signup' %}" class="allauth-footer-link">
+    <i class="fas fa-user-plus me-2"></i>{% trans "Crear cuenta gratis" %}
+  </a>
+{% endblock allauth_footer %}

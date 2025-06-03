@@ -1,0 +1,50 @@
+{% extends "allauth/layouts/entrance.html" %}
+{% load i18n allauth %}
+{% load socialaccount %}
+
+{% block allauth_title %}
+  {% trans "Cerrar Sesión" %}
+{% endblock allauth_title %}
+
+{% block allauth_subtitle %}
+  {% trans "¿Estás seguro de que quieres cerrar sesión?" %}
+{% endblock allauth_subtitle %}
+
+{% block content %}
+  <div class="text-center py-4">
+    <div class="mb-4">
+      <i class="fas fa-sign-out-alt text-secondary" style="font-size: 4rem;"></i>
+    </div>
+
+    <div class="allauth-alert allauth-alert-warning">
+      <p class="mb-0">
+        {% trans "Al cerrar sesión perderás el acceso a tu cuenta hasta que vuelvas a iniciar sesión." %}
+      </p>
+    </div>
+
+    {% element form form=form method="post" %}
+      {% slot actions %}
+
+      {% csrf_token %}
+        <div class="d-grid gap-3">
+          {% element button type="submit" tags="primary,logout" %}
+            <i class="fas fa-sign-out-alt me-2"></i>{% trans "Sí, Cerrar Sesión" %}
+          {% endelement %}
+
+          <a href="{% url 'home' %}" class="allauth-btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>{% trans "Cancelar" %}
+          </a>
+        </div>
+      {% endslot %}
+    {% endelement %}
+  </div>
+{% endblock content %}
+
+{% block allauth_footer %}
+  <p class="allauth-footer-text">
+    {% trans "¿Necesitas ayuda?" %}
+  </p>
+  <a href="{% url 'home' %}" class="allauth-footer-link">
+    <i class="fas fa-home me-2"></i>{% trans "Volver al inicio" %}
+  </a>
+{% endblock allauth_footer %}

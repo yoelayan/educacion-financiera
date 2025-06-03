@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block css %}
+  {{ block.super }}
+  {% load compress %}
+  {% compress css %}
+    <link href="{% static 'css/allauth.css' %}" rel="stylesheet" />
+  {% endcompress %}
+{% endblock css %}
+
+{% block main %}
+  <div class="container-custom py-8">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="allauth-card">
+          <!-- Header -->
+          <div class="allauth-header">
+            <div class="allauth-logo">
+              <i class="fas fa-user-cog"></i>
+            </div>
+            <h1 class="allauth-title">
+              {% block manage_title %}
+                {% trans "Gestión de Cuenta" %}
+              {% endblock manage_title %}
+            </h1>
+            <p class="allauth-subtitle">
+              {% block manage_subtitle %}
+                {% trans "Administra la configuración de tu cuenta" %}
+              {% endblock manage_subtitle %}
+            </p>
+          </div>
+
+          <!-- Content -->
+          <div class="allauth-form">
+            {% block content %}
+            {% endblock content %}
+          </div>
+
+          <!-- Footer -->
+          <div class="allauth-footer">
+            {% block manage_footer %}
+              <a href="{% url 'users:detail' user.pk %}" class="allauth-footer-link">
+                <i class="fas fa-arrow-left me-2"></i>{% trans "Volver al perfil" %}
+              </a>
+            {% endblock manage_footer %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock main %}
+
+{% block javascript %}
+  {{ block.super }}
+  {% load compress %}
+  {% compress js %}
+    <script src="{% static 'js/allauth.js' %}"></script>
+  {% endcompress %}
+{% endblock javascript %}

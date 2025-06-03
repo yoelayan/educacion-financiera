@@ -1,0 +1,295 @@
+{% extends "base_landing.html" %}
+{% load component %}
+{% load static %}
+
+{% block title %}Educación Financiera - Aprende finanzas desde cero{% endblock title %}
+
+{% block bodyclass %}home-page{% endblock bodyclass %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container-custom">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Transforma tu vida <span class="text-primary">financiera</span>
+      </h1>
+      <p class="hero-subtitle">
+        Aprende inversiones, ahorro y finanzas personales con los mejores expertos de Latinoamérica
+      </p>
+      <div class="mt-8">
+        {% component "link" variant="primary" size="lg" href="#cursos" css_class="btn-primary-custom"%}
+          <i class="fas fa-play me-2"></i>Comenzar ahora
+        {% endcomponent %}
+        {% component "link" variant="secondary" size="lg" href="#sobre-nosotros" css_class="btn-secondary-custom" %}
+          <i class="fas fa-info-circle me-2"></i>Saber más
+        {% endcomponent %}
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+  <div class="container-custom">
+    <div class="row">
+      <div class="col-md-3 col-6">
+        <div class="stat-item">
+          <span class="stat-number">+5,000</span>
+          <span class="stat-label">Estudiantes</span>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-item">
+          <span class="stat-number">25+</span>
+          <span class="stat-label">Cursos</span>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-item">
+          <span class="stat-number">15+</span>
+          <span class="stat-label">Instructores</span>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-item">
+          <span class="stat-number">98%</span>
+          <span class="stat-label">Satisfacción</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Latest Courses Section -->
+<section class="py-16" id="cursos">
+  <div class="container-custom">
+    <h2 class="section-title">Últimos Cursos Lanzados</h2>
+    <p class="section-subtitle">
+      Descubre nuestros cursos más recientes y mantente al día con las últimas tendencias en educación financiera
+    </p>
+
+    <div class="course-grid">
+      <!-- Course Card 1 -->
+      <div class="course-card">
+        <div class="course-image"></div>
+        <div class="course-content">
+          <div class="course-category">Inversiones</div>
+          <h3 class="course-title">Introducción a las Criptomonedas</h3>
+          <p class="course-description">
+            Aprende los fundamentos de Bitcoin, Ethereum y otras criptomonedas. Desde conceptos básicos hasta estrategias de inversión.
+          </p>
+          <div class="course-footer">
+            <span class="course-instructor">Ana García</span>
+            <div class="course-rating">
+              <i class="fas fa-star star-icon"></i>
+              <span>4.8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Card 2 -->
+      <div class="course-card">
+        <div class="course-image"></div>
+        <div class="course-content">
+          <div class="course-category">Finanzas Personales</div>
+          <h3 class="course-title">Presupuesto Personal Efectivo</h3>
+          <p class="course-description">
+            Domina el arte de crear y mantener un presupuesto que realmente funcione para tu estilo de vida.
+          </p>
+          <div class="course-footer">
+            <span class="course-instructor">Carlos Mendoza</span>
+            <div class="course-rating">
+              <i class="fas fa-star star-icon"></i>
+              <span>4.9</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Course Card 3 -->
+      <div class="course-card">
+        <div class="course-image"></div>
+        <div class="course-content">
+          <div class="course-category">Ahorro</div>
+          <h3 class="course-title">Estrategias de Ahorro Inteligente</h3>
+          <p class="course-description">
+            Descubre técnicas probadas para maximizar tus ahorros y alcanzar tus metas financieras más rápido.
+          </p>
+          <div class="course-footer">
+            <span class="course-instructor">María Rodriguez</span>
+            <div class="course-rating">
+              <i class="fas fa-star star-icon"></i>
+              <span>4.7</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-8">
+      <a href="#" class="btn-primary-custom">
+        <i class="fas fa-plus me-2"></i>Ver todos los cursos
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Courses Section -->
+<section class="py-16 bg-gray-50">
+  <div class="container-custom">
+    <h2 class="section-title">Cursos Más Populares</h2>
+    <p class="section-subtitle">
+      Los cursos favoritos de nuestra comunidad, perfectos para comenzar tu journey financiero
+    </p>
+
+    <div class="course-grid">
+      <!-- Popular Course Card 1 -->
+      <div class="course-card">
+        <div class="course-image"></div>
+        <div class="course-content">
+          <div class="course-category">Básico</div>
+          <h3 class="course-title">Finanzas Personales para Principiantes</h3>
+          <p class="course-description">
+            Todo lo que necesitas saber para tomar control de tus finanzas desde cero. Perfecto para empezar.
+          </p>
+          <div class="course-footer">
+            <span class="course-instructor">Laura Jiménez</span>
+            <div class="course-rating">
+              <i class="fas fa-star star-icon"></i>
+              <span>4.9</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Popular Course Card 2 -->
+      <div class="course-card">
+        <div class="course-image"></div>
+        <div class="course-content">
+          <div class="course-category">Inversiones</div>
+          <h3 class="course-title">Inversión en Bolsa de Valores</h3>
+          <p class="course-description">
+            Aprende a invertir en acciones de manera inteligente y construye un portafolio diversificado.
+          </p>
+          <div class="course-footer">
+            <span class="course-instructor">Roberto Silva</span>
+            <div class="course-rating">
+              <i class="fas fa-star star-icon"></i>
+              <span>4.8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Popular Course Card 3 -->
+      <div class="course-card">
+        <div class="course-image"></div>
+        <div class="course-content">
+          <div class="course-category">Emprendimiento</div>
+          <h3 class="course-title">Finanzas para Emprendedores</h3>
+          <p class="course-description">
+            Gestiona las finanzas de tu negocio como un experto y toma decisiones financieras informadas.
+          </p>
+          <div class="course-footer">
+            <span class="course-instructor">Diego Vargas</span>
+            <div class="course-rating">
+              <i class="fas fa-star star-icon"></i>
+              <span>4.6</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Popular Course Card 4 -->
+      <div class="course-card">
+        <div class="course-image"></div>
+        <div class="course-content">
+          <div class="course-category">Inversiones</div>
+          <h3 class="course-title">Fondos de Inversión y ETFs</h3>
+          <p class="course-description">
+            Comprende cómo funcionan los fondos de inversión y ETFs para diversificar tu portafolio.
+          </p>
+          <div class="course-footer">
+            <span class="course-instructor">Patricia Morales</span>
+            <div class="course-rating">
+              <i class="fas fa-star star-icon"></i>
+              <span>4.7</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-8">
+      <a href="#" class="btn-primary-custom">
+        <i class="fas fa-fire me-2"></i>Ver cursos populares
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-16">
+  <div class="container-custom">
+    <h2 class="section-title">¿Por qué elegirnos?</h2>
+    <div class="row mt-12">
+      <div class="col-md-4 mb-8">
+        <div class="text-center">
+          <div class="mb-4">
+            <i class="fas fa-chalkboard-teacher text-primary" style="font-size: 3rem;"></i>
+          </div>
+          <h4 class="font-bold mb-3">Expertos de la Industria</h4>
+          <p class="text-gray-600">
+            Aprende de profesionales con años de experiencia en el sector financiero y casos reales.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-8">
+        <div class="text-center">
+          <div class="mb-4">
+            <i class="fas fa-mobile-alt text-primary" style="font-size: 3rem;"></i>
+          </div>
+          <h4 class="font-bold mb-3">Aprende a tu Ritmo</h4>
+          <p class="text-gray-600">
+            Accede a los cursos desde cualquier dispositivo, cuando quieras y donde quieras.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-8">
+        <div class="text-center">
+          <div class="mb-4">
+            <i class="fas fa-certificate text-primary" style="font-size: 3rem;"></i>
+          </div>
+          <h4 class="font-bold mb-3">Certificación Oficial</h4>
+          <p class="text-gray-600">
+            Obtén certificados reconocidos que validen tus conocimientos en finanzas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="hero-section py-16">
+  <div class="container-custom">
+    <div class="text-center">
+      <h2 class="text-3xl font-bold mb-6">¿Listo para transformar tu futuro financiero?</h2>
+      <p class="text-xl mb-8 opacity-90">
+        Únete a miles de estudiantes que ya están mejorando su vida financiera
+      </p>
+      <a href="#" class="btn-primary-custom me-4">
+        <i class="fas fa-rocket me-2"></i>Comenzar gratis
+      </a>
+      <a href="#" class="btn-secondary-custom">
+        <i class="fas fa-play me-2"></i>Ver demo
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+
+

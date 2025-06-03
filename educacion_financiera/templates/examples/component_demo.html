@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load component %}
+
+{% block title %}Component System Demo{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h1>Component System Demo</h1>
+  <p class="lead">Demonstrating the new component system with slots and layouts.</p>
+
+  <div class="row">
+    <div class="col-md-8">
+
+      <!-- Basic Button Examples -->
+      <section class="mb-5">
+        <h2>Buttons</h2>
+
+        <!-- Simple button with text attribute -->
+        {% component "button" text="Primary Button" variant="primary" %}{% endcomponent %}
+
+        <!-- Button with slot content -->
+        {% component "button" variant="success" size="lg" %}
+          <i class="bi bi-check-circle me-2"></i>Success with Icon
+        {% endcomponent %}
+
+        <!-- Button with convenience tag -->
+        {% button "Danger Button" variant="danger" icon_left="exclamation-triangle" %}
+      </section>
+
+      <!-- Card Examples -->
+      <section class="mb-5">
+        <h2>Cards</h2>
+
+        <!-- Simple card with attributes -->
+        {% component "card" title="Simple Card" text="This is a simple card with title and text." shadow="sm" %}{% endcomponent %}
+
+        <!-- Card with slots -->
+        {% component "card" css_class="mb-3" %}
+          {% slot "header" %}
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Custom Header</h5>
+              {% icon "gear" size="sm" %}
+            </div>
+          {% endslot %}
+
+          {% slot "body" %}
+            <p>This card uses custom slots for header and body content.</p>
+            <p>You can put any HTML content in slots.</p>
+          {% endslot %}
+
+          {% slot "footer" %}
+            <div class="d-flex justify-content-end">
+              {% component "button" text="Action" variant="primary" size="sm" %}{% endcomponent %}
+              {% component "button" text="Cancel" variant="outline-secondary" size="sm" %}{% endcomponent %}
+            </div>
+          {% endslot %}
+        {% endcomponent %}
+      </section>
+
+      <!-- Alert Examples -->
+      <section class="mb-5">
+        <h2>Alerts</h2>
+
+        {% component "alert" variant="success" icon="check-circle" title="Success!" message="Your action was completed successfully." dismissible=True %}{% endcomponent %}
+
+        {% component "alert" variant="warning" icon="exclamation-triangle" %}
+          <strong>Warning!</strong> This is a custom alert with slot content.
+          <hr>
+          <p class="mb-0">You can include any HTML content in the alert body.</p>
+        {% endcomponent %}
+      </section>
+
+      <!-- Icon Examples -->
+      <section class="mb-5">
+        <h2>Icons</h2>
+
+        <p>
+          {% icon "house" size="sm" color="primary" %} Home
+          {% icon "user" size="md" color="success" %} User
+          {% icon "gear" size="lg" color="warning" %} Settings
+        </p>
+
+        <p>Different icon libraries:</p>
+        <p>
+          {% icon "heart" library="bootstrap" color="danger" %} Bootstrap Icons
+          {% icon "star" library="fontawesome" color="warning" %} Font Awesome
+        </p>
+      </section>
+
+    </div>
+
+    <!-- Sidebar Example -->
+    <div class="col-md-4">
+      {% component "sidebar" "layout" title="Navigation" collapsible=True id="demo-sidebar" %}
+        {% slot "navigation" %}
+          <ul class="nav nav-pills flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="#buttons">
+                {% icon "circle-fill" size="sm" %} Buttons
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#cards">
+                {% icon "card-text" size="sm" %} Cards
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#alerts">
+                {% icon "exclamation-triangle" size="sm" %} Alerts
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#icons">
+                {% icon "star" size="sm" %} Icons
+              </a>
+            </li>
+          </ul>
+        {% endslot %}
+
+        {% slot "footer" %}
+          <div class="text-center">
+            <small class="text-muted">Component Demo</small>
+          </div>
+        {% endslot %}
+      {% endcomponent %}
+    </div>
+  </div>
+
+  <!-- Advanced Examples -->
+  <section class="mt-5">
+    <h2>Advanced Usage</h2>
+
+    <!-- Nested Components -->
+    <div class="row">
+      <div class="col-md-6">
+        {% component "card" title="Nested Components" %}
+          <p>Components can be nested inside each other:</p>
+
+          {% component "alert" variant="info" icon="info-circle" %}
+            This alert is inside a card component.
+          {% endcomponent %}
+
+          <div class="d-flex gap-2">
+            {% component "button" text="Primary" variant="primary" size="sm" %}{% endcomponent %}
+            {% component "button" text="Secondary" variant="secondary" size="sm" %}{% endcomponent %}
+          </div>
+        {% endcomponent %}
+      </div>
+
+      <div class="col-md-6">
+        {% component "card" %}
+          {% slot "header" %}
+            <div class="d-flex align-items-center">
+              {% icon "code-slash" color="primary" %}
+              <span class="ms-2">Code Example</span>
+            </div>
+          {% endslot %}
+
+          <pre><code>{% templatetag openblock %} component "button" variant="primary" {% templatetag closeblock %}
+  Click me!
+{% templatetag openblock %} endcomponent {% templatetag closeblock %}</code></pre>
+        {% endcomponent %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Simple Tag Examples -->
+  <section class="mt-5">
+    <h2>Simple Tags (No Slots)</h2>
+    <p>For simple components without slots, you can use the render_component tag:</p>
+
+    <div class="d-flex gap-2 mb-3">
+      {% render_component "button" variant="outline-primary" text="Simple Button" %}
+      {% render_component "button" variant="outline-success" text="Another Button" icon_left="plus" %}
+    </div>
+
+    {% render_component "alert" variant="info" message="This alert was created with render_component tag." icon="info-circle" %}
+  </section>
+
+</div>
+{% endblock %}

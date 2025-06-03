@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ module.title }} - {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <!-- Breadcrumbs -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'courses:course_list' %}">{% translate "Courses" %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'courses:course_detail' course.slug %}">{{ course.title }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ module.title }}</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <!-- Sidebar with module/lesson navigation -->
+    <div class="col-md-3">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>{% translate "Course Content" %}</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            {% for m in course.modules.all %}
+              <a href="{% url 'courses:module_detail' course.slug m.id %}"
+                 class="list-group-item list-group-item-action {% if m.id == module.id %}active{% endif %}">
+                <div class="d-flex w-100 justify-content-between">
+                  <h6 class="mb-1">{{ m.title }}</h6>
+                </div>
+                <small>{{ m.lessons.count }} {% translate "lessons" %}</small>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module main content -->
+    <div class="col-md-9">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h1 class="card-title h3">{{ module.title }}</h1>
+          <p class="text-muted mb-4">{{ module.description|linebreaks }}</p>
+
+          <h3 class="h5 mb-3">{% translate "Lessons" %}</h3>
+
+          {% if lessons %}
+            <div class="list-group mb-4">
+              {% for lesson in lessons %}
+                <a href="{% url 'courses:lesson_detail' course.slug module.id lesson.id %}"
+                   class="list-group-item list-group-item-action">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1">{{ forloop.counter }}. {{ lesson.title }}</h6>
+                    {% if lesson.video_url or lesson.video_file %}
+                      <span class="badge bg-primary rounded-pill">{% translate "Video" %}</span>
+                    {% endif %}
+                  </div>
+                  <p class="mb-1 text-muted small">{{ lesson.description|truncatewords:25 }}</p>
+                </a>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert alert-info">
+              {% translate "No lessons available in this module yet." %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Module progress -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>{% translate "Your Progress" %}</h5>
+        </div>
+        <div class="card-body">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+          </div>
+
+          <div class="mt-3 text-center">
+            {% if lessons %}
+              <a href="{% url 'courses:lesson_detail' course.slug module.id lessons.first.id %}" class="btn btn-primary">
+                {% translate "Start First Lesson" %}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% translate "Subscription Checkout" %} - {{ subscription_type.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .checkout-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .plan-features {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  .plan-features li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f1f1;
+  }
+  .plan-features li:last-child {
+    border-bottom: none;
+  }
+  #payment-form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  #payment-element {
+    margin-bottom: 24px;
+  }
+  #payment-message {
+    display: none;
+    color: #dc3545;
+    margin-top: 1rem;
+  }
+  #spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    visibility: hidden;
+  }
+  #spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #007bff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 checkout-container">
+  <!-- Breadcrumbs -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">{% translate "Home" %}</a></li>
+      <li class="breadcrumb-item"><a href="#">{% translate "Subscriptions" %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% translate "Checkout" %}</li>
+    </ol>
+  </nav>
+
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h1 class="text-center mb-4">{% translate "Subscription Checkout" %}</h1>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <!-- Subscription plan details -->
+    <div class="col-md-5">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>{{ subscription_type.name }}</h5>
+        </div>
+        <div class="card-body">
+          <div class="text-center mb-3">
+            <h4 class="text-primary">{{ subscription_type.price }} USD</h4>
+            <p class="text-muted">
+              {% if subscription_type.duration_days > 0 %}
+                {% blocktranslate with days=subscription_type.duration_days %}for {{ days }} days{% endblocktranslate %}
+              {% else %}
+                {% translate "Lifetime access" %}
+              {% endif %}
+            </p>
+          </div>
+
+          <p>{{ subscription_type.description }}</p>
+
+          <h6 class="mt-4">{% translate "Features" %}:</h6>
+          <ul class="plan-features">
+            {% for feature in subscription_type.features.splitlines %}
+              {% if feature %}
+                <li><i class="fas fa-check text-success me-2"></i> {{ feature }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment form -->
+    <div class="col-md-7">
+      <div class="card">
+        <div class="card-header">
+          <h5>{% translate "Payment Information" %}</h5>
+        </div>
+        <div class="card-body">
+          <form id="payment-form">
+            <div id="payment-element"></div>
+            <button id="submit-button" class="btn btn-primary w-100">
+              {% translate "Pay" %} {{ subscription_type.price }} USD
+            </button>
+            <div id="payment-message" class="mt-3"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Spinner overlay for loading -->
+<div id="spinner-overlay">
+  <div id="spinner"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Stripe
+    const stripe = Stripe("{{ stripe_public_key }}");
+    const checkoutSessionId = "{{ checkout_session_id }}";
+
+    // Show loading overlay
+    const showSpinner = () => {
+      document.getElementById('spinner-overlay').style.visibility = 'visible';
+    };
+
+    // Hide loading overlay
+    const hideSpinner = () => {
+      document.getElementById('spinner-overlay').style.visibility = 'hidden';
+    };
+
+    // Handle redirect to Stripe checkout
+    const redirectToCheckout = async () => {
+      showSpinner();
+
+      try {
+        const result = await stripe.redirectToCheckout({
+          sessionId: checkoutSessionId
+        });
+
+        if (result.error) {
+          console.error(result.error.message);
+          document.getElementById('payment-message').textContent = result.error.message;
+          document.getElementById('payment-message').style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('payment-message').textContent = error.message;
+        document.getElementById('payment-message').style.display = 'block';
+      } finally {
+        hideSpinner();
+      }
+    };
+
+    // Redirect on button click
+    document.getElementById('submit-button').addEventListener('click', function(e) {
+      e.preventDefault();
+      redirectToCheckout();
+    });
+
+    // Auto redirect option
+    // redirectToCheckout();
+  });
+</script>
+{% endblock %}

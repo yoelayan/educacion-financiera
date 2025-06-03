@@ -1,0 +1,35 @@
+<div class="card{% if attrs.css_class %} {{ attrs.css_class }}{% endif %}{% if attrs.shadow %} shadow-{{ attrs.shadow }}{% endif %}"
+     {% if attrs.id %}id="{{ attrs.id }}"{% endif %}>
+
+  {% if slots.header or attrs.title %}
+    <div class="card-header{% if attrs.header_class %} {{ attrs.header_class }}{% endif %}">
+      {% if slots.header %}
+        {% for slot_content in slots.header %}{{ slot_content|safe }}{% endfor %}
+      {% elif attrs.title %}
+        <h5 class="card-title mb-0">{{ attrs.title }}</h5>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if attrs.image %}
+    <img src="{{ attrs.image }}" class="card-img-top" alt="{{ attrs.image_alt|default:'' }}">
+  {% endif %}
+
+  <div class="card-body{% if attrs.body_class %} {{ attrs.body_class }}{% endif %}">
+    {% if slots.body %}
+      {% for slot_content in slots.body %}{{ slot_content|safe }}{% endfor %}
+    {% elif slots.default %}
+      {% for slot_content in slots.default %}{{ slot_content|safe }}{% endfor %}
+    {% endif %}
+
+    {% if attrs.text %}
+      <p class="card-text">{{ attrs.text }}</p>
+    {% endif %}
+  </div>
+
+  {% if slots.footer %}
+    <div class="card-footer{% if attrs.footer_class %} {{ attrs.footer_class }}{% endif %}">
+      {% for slot_content in slots.footer %}{{ slot_content|safe }}{% endfor %}
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,107 @@
+{% extends "allauth/layouts/manage.html" %}
+{% load i18n allauth %}
+
+{% block manage_title %}
+  {% trans "Gestionar Emails" %}
+{% endblock manage_title %}
+
+{% block manage_subtitle %}
+  {% trans "Administra las direcciones de correo electrónico de tu cuenta" %}
+{% endblock manage_subtitle %}
+
+{% block content %}
+  {% if emailaddresses %}
+    <div class="mb-6">
+      <h4 class="mb-4">{% trans "Direcciones de Email" %}</h4>
+
+      {% for emailaddress in emailaddresses %}
+        <div class="allauth-alert {% if emailaddress.primary %}allauth-alert-success{% else %}allauth-alert-info{% endif %}">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ emailaddress.email }}</strong>
+              {% if emailaddress.verified %}
+                <span class="badge bg-success ms-2">
+                  <i class="fas fa-check me-1"></i>{% trans "Verificado" %}
+                </span>
+              {% else %}
+                <span class="badge bg-warning ms-2">
+                  <i class="fas fa-exclamation-triangle me-1"></i>{% trans "No verificado" %}
+                </span>
+              {% endif %}
+              {% if emailaddress.primary %}
+                <span class="badge bg-primary ms-2">
+                  <i class="fas fa-star me-1"></i>{% trans "Principal" %}
+                </span>
+              {% endif %}
+            </div>
+
+            <div class="btn-group" role="group">
+              {% if not emailaddress.verified %}
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action_send" value="1">
+                  <input type="hidden" name="email" value="{{ emailaddress.email }}">
+                  <button type="submit" class="allauth-btn-secondary">
+                    <i class="fas fa-paper-plane me-1"></i>{% trans "Verificar" %}
+                  </button>
+                </form>
+              {% endif %}
+
+              {% if not emailaddress.primary and emailaddress.verified %}
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action_primary" value="1">
+                  <input type="hidden" name="email" value="{{ emailaddress.email }}">
+                  <button type="submit" class="allauth-btn-secondary">
+                    <i class="fas fa-star me-1"></i>{% trans "Principal" %}
+                  </button>
+                </form>
+              {% endif %}
+
+              {% if not emailaddress.primary %}
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="action_remove" value="1">
+                  <input type="hidden" name="email" value="{{ emailaddress.email }}">
+                  <button type="submit" class="allauth-btn-secondary">
+                    <i class="fas fa-trash me-1"></i>{% trans "Eliminar" %}
+                  </button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Add Email Form -->
+  <div class="allauth-divider">
+    <span>{% trans "Agregar nuevo email" %}</span>
+  </div>
+
+  {% element form form=form method="post" %}
+    {% slot body %}
+      {% element field field=form.email %}
+        {% slot label %}
+          <i class="fas fa-envelope me-2"></i>{% trans "Nueva Dirección de Email" %}
+        {% endslot %}
+      {% endelement %}
+    {% endslot %}
+
+    {% slot actions %}
+      {% element button type="submit" tags="primary,add_email" %}
+        <i class="fas fa-plus me-2"></i>{% trans "Agregar Email" %}
+      {% endelement %}
+    {% endslot %}
+  {% endelement %}
+{% endblock content %}
+
+{% block manage_footer %}
+  <p class="allauth-footer-text">
+    {% trans "¿Necesitas ayuda?" %}
+  </p>
+  <a href="{% url 'users:detail' user.pk %}" class="allauth-footer-link">
+    <i class="fas fa-user me-2"></i>{% trans "Volver al perfil" %}
+  </a>
+{% endblock manage_footer %}
